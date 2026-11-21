@@ -51,7 +51,7 @@
 <body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-surface-950 dark:text-slate-100 transition-colors duration-200">
   <!-- Header -->
   <header class="sticky top-0 z-30 border-b border-slate-200/80 dark:border-white/5 bg-white/80 dark:bg-surface-950/80 backdrop-blur-md">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
       <div class="flex items-center gap-3 min-w-0">
         <div class="w-9 h-9 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-500 dark:text-indigo-400 shrink-0 shadow-sm">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -101,10 +101,10 @@
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6 pb-16">
     <!-- Stat Cards -->
     <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-      <button type="button" data-stat-filter="today" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-amber-500/40 transition group">
+      <button type="button" data-stat-filter="today" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-amber-500/40 transition">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Due Today</span>
           <span class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
@@ -115,7 +115,7 @@
         <div class="text-[11px] text-slate-500 dark:text-slate-500 mt-0.5">Focus for today</div>
       </button>
 
-      <button type="button" data-stat-filter="upcoming" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-indigo-500/40 transition group">
+      <button type="button" data-stat-filter="upcoming" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-indigo-500/40 transition">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Upcoming (7d)</span>
           <span class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
@@ -126,7 +126,7 @@
         <div class="text-[11px] text-slate-500 dark:text-slate-500 mt-0.5">Next 7 days</div>
       </button>
 
-      <button type="button" data-stat-filter="overdue" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-rose-500/40 transition group">
+      <button type="button" data-stat-filter="overdue" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-rose-500/40 transition">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Overdue</span>
           <span class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-500 flex items-center justify-center">
@@ -137,7 +137,7 @@
         <div class="text-[11px] text-slate-500 dark:text-slate-500 mt-0.5">Needs attention</div>
       </button>
 
-      <button type="button" data-stat-filter="completed" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-emerald-500/40 transition group">
+      <button type="button" data-stat-filter="completed" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-emerald-500/40 transition">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Completed</span>
           <span class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
@@ -149,8 +149,96 @@
       </button>
     </section>
 
-    <!-- Quick-Add Form -->
-    <section class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 shadow-sm">
+    <!-- Tasks Section (Calendar View by Default, ABOVE Add Task Form) -->
+    <section class="space-y-3">
+      <!-- Filter Tabs + View Switcher -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2" id="filterTabs">
+          <button type="button" data-filter="active" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+            <span>All Active</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
+          </button>
+          <button type="button" data-filter="today" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+            <span>Due Today</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
+          </button>
+          <button type="button" data-filter="upcoming" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+            <span>Upcoming (7d)</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
+          </button>
+          <button type="button" data-filter="overdue" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+            <span>Overdue</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
+          </button>
+          <button type="button" data-filter="completed" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+            <span>Completed</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
+          </button>
+        </div>
+
+        <!-- Calendar / List Toggle -->
+        <div class="inline-flex p-1 rounded-xl bg-slate-200/70 dark:bg-surface-900 border border-slate-200 dark:border-white/10">
+          <button id="viewCalendarBtn" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold transition">Calendar</button>
+          <button id="viewListBtn" type="button" class="px-3 py-1 rounded-lg text-xs font-semibold transition">List</button>
+        </div>
+      </div>
+
+      <!-- Search & Course Filter -->
+      <div class="flex flex-col sm:flex-row gap-2.5">
+        <div class="relative flex-1">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search assignments, courses, or notes... (press /)"
+            class="w-full pl-10 pr-4 py-2 rounded-xl text-sm bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+          />
+        </div>
+
+        <select id="courseFilterSelect" class="px-3.5 py-2 rounded-xl text-sm bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          <option value="all">All Courses</option>
+        </select>
+
+        <select id="sortSelect" class="hidden px-3.5 py-2 rounded-xl text-sm bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          <option value="dueAsc">Sort: Due Soonest</option>
+          <option value="priorityDesc">Sort: Highest Priority</option>
+          <option value="newest">Sort: Recently Added</option>
+        </select>
+      </div>
+
+      <!-- Calendar View Container -->
+      <div id="calendarView" class="rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 overflow-hidden shadow-sm">
+        <div class="px-4 sm:px-5 py-3.5 border-b border-slate-200 dark:border-white/5 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <h2 id="calendarMonthLabel" class="text-base font-bold tracking-tight">Month Year</h2>
+            <span class="hidden sm:inline text-[11px] text-slate-400 dark:text-slate-500">• Click a task to edit, or a day number to add</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="calPrevBtn" type="button" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700 text-slate-600 dark:text-slate-300 transition" title="Previous month">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            </button>
+            <button id="calTodayBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700 text-slate-700 dark:text-slate-200 transition">Today</button>
+            <button id="calNextBtn" type="button" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700 text-slate-600 dark:text-slate-300 transition" title="Next month">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Day-of-week header -->
+        <div class="grid grid-cols-7 border-b border-slate-200 dark:border-white/5 bg-slate-50/70 dark:bg-surface-950/60 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 py-2">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div id="calendarGrid" class="grid grid-cols-7 divide-x divide-y divide-slate-200/80 dark:divide-white/5"></div>
+      </div>
+
+      <!-- List View Container (Optional Toggle) -->
+      <div id="taskList" class="hidden space-y-2.5"></div>
+    </section>
+
+    <!-- Quick-Add Form (BELOW Calendar) -->
+    <section id="addTaskSection" class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Add New Homework or Task</h2>
+      </div>
       <form id="addTaskForm" class="space-y-4">
         <div class="flex flex-col sm:flex-row gap-3">
           <input
@@ -219,61 +307,13 @@
         </div>
       </form>
     </section>
-
-    <!-- Filter & Search Controls -->
-    <section class="space-y-3">
-      <div class="flex flex-wrap items-center gap-2" id="filterTabs">
-        <button type="button" data-filter="active" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
-          <span>All Active</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
-        </button>
-        <button type="button" data-filter="today" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
-          <span>Due Today</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
-        </button>
-        <button type="button" data-filter="upcoming" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
-          <span>Upcoming</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
-        </button>
-        <button type="button" data-filter="overdue" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
-          <span>Overdue</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
-        </button>
-        <button type="button" data-filter="completed" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
-          <span>Completed</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
-        </button>
-      </div>
-
-      <div class="flex flex-col sm:flex-row gap-2.5">
-        <div class="relative flex-1">
-          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-          </svg>
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="Search assignments, courses, or notes... (press /)"
-            class="w-full pl-10 pr-4 py-2 rounded-xl text-sm bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 placeholder:text-slate-400 dark:placeholder:text-slate-500"
-          />
-        </div>
-
-        <select id="courseFilterSelect" class="px-3.5 py-2 rounded-xl text-sm bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
-          <option value="all">All Courses</option>
-        </select>
-
-        <select id="sortSelect" class="px-3.5 py-2 rounded-xl text-sm bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
-          <option value="dueAsc">Sort: Due Soonest</option>
-          <option value="priorityDesc">Sort: Highest Priority</option>
-          <option value="newest">Sort: Recently Added</option>
-        </select>
-      </div>
-    </section>
-
-    <!-- Task List -->
-    <section id="taskList" class="space-y-2.5 pb-12"></section>
   </main>
 
   <!-- Edit Task Modal -->
   <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
     <div class="w-full max-w-lg rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 shadow-2xl overflow-hidden">
       <div class="px-5 py-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
-        <h2 class="text-base font-bold">Edit Assignment</h2>
+        <h2 class="text-base font-bold">Assignment Details</h2>
         <button type="button" data-close-modal="editModal" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-surface-800 text-slate-400">✕</button>
       </div>
       <form id="editTaskForm" class="p-5 space-y-4">
@@ -308,9 +348,12 @@
           <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Notes</label>
           <textarea id="editNotesInput" rows="3" class="w-full px-3.5 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-y"></textarea>
         </div>
-        <div class="flex justify-end gap-2 pt-2">
-          <button type="button" data-close-modal="editModal" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700">Cancel</button>
-          <button type="submit" class="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500">Save Changes</button>
+        <div class="flex items-center justify-between gap-2 pt-2">
+          <button id="modalDeleteTaskBtn" type="button" class="px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-500 hover:bg-rose-500/10 transition">Delete Task</button>
+          <div class="flex gap-2">
+            <button type="button" data-close-modal="editModal" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700">Cancel</button>
+            <button type="submit" class="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500">Save Changes</button>
+          </div>
         </div>
       </form>
     </div>
@@ -404,11 +447,16 @@
       { id: 'c-personal', name: 'Personal', color: 'sky' }
     ];
 
+    const todayNow = new Date();
+
     // ---------- App State ----------
     let state = {
       tasks: [],
       courses: [],
       filter: 'active',
+      viewMode: 'calendar', // 'calendar' | 'list'
+      calYear: todayNow.getFullYear(),
+      calMonth: todayNow.getMonth(),
       courseFilter: 'all',
       sort: 'dueAsc',
       search: '',
@@ -441,10 +489,14 @@
       localStorage.setItem(STORAGE_KEYS.courses, JSON.stringify(state.courses));
     }
 
-    // ---------- Date Utilities (Timezone Safe) ----------
+    // ---------- Date Utilities ----------
+    function toISO(year, month, day) {
+      return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+
     function getTodayISO() {
       const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      return toISO(d.getFullYear(), d.getMonth(), d.getDate());
     }
 
     function parseDueDateTime(dateStr, timeStr) {
@@ -465,16 +517,15 @@
       if (task.completed) return 'completed';
       const now = new Date();
       const due = parseDueDateTime(task.dueDate, task.dueTime);
-      if (!due) return 'upcoming';
+      if (!due) return 'future';
       if (due < now) return 'overdue';
-      const todayStart = startOfDay(now);
-      const dueStart = startOfDay(due);
-      const diffDays = Math.round((dueStart - todayStart) / 86400000);
+      const diffDays = Math.round((startOfDay(due) - startOfDay(now)) / 86400000);
       if (diffDays === 0) return 'today';
-      return 'upcoming';
+      return 'future';
     }
 
-    function isWithinNext7Days(task) {
+    // Shared 7-day rule used by BOTH the top stat card and the Upcoming (7d) filter tab
+    function isUpcoming7d(task) {
       if (task.completed) return false;
       const now = new Date();
       const due = parseDueDateTime(task.dueDate, task.dueTime);
@@ -484,7 +535,7 @@
     }
 
     function formatTime12h(timeStr) {
-      if (!timeStr) return '11:59 PM';
+      if (!timeStr) return '';
       const [hh, mm] = timeStr.split(':').map(Number);
       const suffix = hh >= 12 ? 'PM' : 'AM';
       const h12 = hh % 12 || 12;
@@ -498,41 +549,22 @@
       const now = new Date();
       const diffDays = Math.round((startOfDay(due) - startOfDay(now)) / 86400000);
       const dateLabel = due.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-      const timeLabel = formatTime12h(task.dueTime);
+      const timeLabel = formatTime12h(task.dueTime) || '11:59 PM';
 
       if (task.completed) {
-        return {
-          text: `${dateLabel} • ${timeLabel}`,
-          cls: 'bg-slate-100 dark:bg-surface-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-white/5'
-        };
+        return { text: `${dateLabel} • ${timeLabel}`, cls: 'bg-slate-100 dark:bg-surface-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-white/5' };
       }
-
       if (due < now) {
         const overdueText = diffDays === 0 ? 'Overdue today' : diffDays === -1 ? '1 day overdue' : `${Math.abs(diffDays)} days overdue`;
-        return {
-          text: `${overdueText} (${dateLabel} • ${timeLabel})`,
-          cls: 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/25'
-        };
+        return { text: `${overdueText} (${dateLabel} • ${timeLabel})`, cls: 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/25' };
       }
-
       if (diffDays === 0) {
-        return {
-          text: `Due Today (${timeLabel})`,
-          cls: 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/25'
-        };
+        return { text: `Due Today (${timeLabel})`, cls: 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/25' };
       }
-
       if (diffDays === 1) {
-        return {
-          text: `Tomorrow (${dateLabel} • ${timeLabel})`,
-          cls: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/25'
-        };
+        return { text: `Tomorrow (${dateLabel} • ${timeLabel})`, cls: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/25' };
       }
-
-      return {
-        text: `In ${diffDays} days (${dateLabel} • ${timeLabel})`,
-        cls: 'bg-slate-100 dark:bg-surface-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/5'
-      };
+      return { text: `In ${diffDays} days (${dateLabel} • ${timeLabel})`, cls: 'bg-slate-100 dark:bg-surface-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/5' };
     }
 
     // ---------- Helpers ----------
@@ -559,6 +591,25 @@
       t.classList.remove('hidden');
       clearTimeout(t._timer);
       t._timer = setTimeout(() => t.classList.add('hidden'), 2600);
+    }
+
+    function getFilteredTasks() {
+      const q = state.search.trim().toLowerCase();
+      return state.tasks.filter(t => {
+        const cat = getDueCategory(t);
+        if (state.filter === 'active' && t.completed) return false;
+        if (state.filter === 'today' && cat !== 'today') return false;
+        if (state.filter === 'upcoming' && !isUpcoming7d(t)) return false;
+        if (state.filter === 'overdue' && cat !== 'overdue') return false;
+        if (state.filter === 'completed' && !t.completed) return false;
+        if (state.courseFilter !== 'all' && t.courseId !== state.courseFilter) return false;
+        if (q) {
+          const courseName = getCourseObj(t.courseId).name.toLowerCase();
+          const haystack = `${t.title} ${t.notes || ''} ${courseName}`.toLowerCase();
+          if (!haystack.includes(q)) return false;
+        }
+        return true;
+      });
     }
 
     // ---------- Rendering ----------
@@ -596,8 +647,33 @@
       });
     }
 
+    function renderViewToggle() {
+      const calBtn = document.getElementById('viewCalendarBtn');
+      const listBtn = document.getElementById('viewListBtn');
+      const calView = document.getElementById('calendarView');
+      const listView = document.getElementById('taskList');
+      const sortSel = document.getElementById('sortSelect');
+
+      const activeCls = 'px-3 py-1 rounded-lg text-xs font-semibold transition bg-indigo-600 text-white shadow-sm';
+      const idleCls = 'px-3 py-1 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200';
+
+      if (state.viewMode === 'calendar') {
+        calBtn.className = activeCls;
+        listBtn.className = idleCls;
+        calView.classList.remove('hidden');
+        listView.classList.add('hidden');
+        sortSel.classList.add('hidden');
+      } else {
+        calBtn.className = idleCls;
+        listBtn.className = activeCls;
+        calView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        sortSel.classList.remove('hidden');
+      }
+    }
+
     function renderStatsAndTabs() {
-      const counts = { active: 0, today: 0, upcoming: 0, overdue: 0, completed: 0, upcoming7d: 0 };
+      const counts = { active: 0, today: 0, upcoming: 0, overdue: 0, completed: 0 };
       state.tasks.forEach(t => {
         const cat = getDueCategory(t);
         if (t.completed) {
@@ -605,14 +681,13 @@
         } else {
           counts.active++;
           if (cat === 'today') counts.today++;
-          else if (cat === 'overdue') counts.overdue++;
-          else counts.upcoming++;
-          if (isWithinNext7Days(t)) counts.upcoming7d++;
+          if (cat === 'overdue') counts.overdue++;
+          if (isUpcoming7d(t)) counts.upcoming++;
         }
       });
 
       document.getElementById('statToday').textContent = counts.today;
-      document.getElementById('statUpcoming').textContent = counts.upcoming7d;
+      document.getElementById('statUpcoming').textContent = counts.upcoming;
       document.getElementById('statOverdue').textContent = counts.overdue;
       document.getElementById('statCompleted').textContent = counts.completed;
 
@@ -630,51 +705,110 @@
       });
     }
 
-    function renderTasks() {
-      renderStatsAndTabs();
+    function renderCalendar(filteredTasks) {
+      const year = state.calYear;
+      const month = state.calMonth;
+      const monthLabel = new Date(year, month, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+      document.getElementById('calendarMonthLabel').textContent = monthLabel;
 
-      const q = state.search.trim().toLowerCase();
-      let filtered = state.tasks.filter(t => {
-        const cat = getDueCategory(t);
-        if (state.filter === 'active' && t.completed) return false;
-        if (state.filter === 'today' && cat !== 'today') return false;
-        if (state.filter === 'upcoming' && cat !== 'upcoming') return false;
-        if (state.filter === 'overdue' && cat !== 'overdue') return false;
-        if (state.filter === 'completed' && !t.completed) return false;
-        if (state.courseFilter !== 'all' && t.courseId !== state.courseFilter) return false;
-        if (q) {
-          const courseName = getCourseObj(t.courseId).name.toLowerCase();
-          const haystack = `${t.title} ${t.notes || ''} ${courseName}`.toLowerCase();
-          if (!haystack.includes(q)) return false;
-        }
-        return true;
+      // Group filtered tasks by YYYY-MM-DD
+      const byDate = {};
+      filteredTasks.forEach(t => {
+        if (!t.dueDate) return;
+        if (!byDate[t.dueDate]) byDate[t.dueDate] = [];
+        byDate[t.dueDate].push(t);
+      });
+      Object.values(byDate).forEach(arr => {
+        arr.sort((a, b) => (a.dueTime || '23:59').localeCompare(b.dueTime || '23:59'));
       });
 
+      const firstDayOfWeek = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const daysInPrevMonth = new Date(year, month, 0).getDate();
+      const totalCells = Math.ceil((firstDayOfWeek + daysInMonth) / 7) * 7;
+      const todayISO = getTodayISO();
+
+      let html = '';
+      for (let i = 0; i < totalCells; i++) {
+        let cellYear = year, cellMonth = month, cellDay, isOutside = false;
+        if (i < firstDayOfWeek) {
+          cellDay = daysInPrevMonth - firstDayOfWeek + i + 1;
+          cellMonth = month - 1;
+          if (cellMonth < 0) { cellMonth = 11; cellYear--; }
+          isOutside = true;
+        } else if (i >= firstDayOfWeek + daysInMonth) {
+          cellDay = i - (firstDayOfWeek + daysInMonth) + 1;
+          cellMonth = month + 1;
+          if (cellMonth > 11) { cellMonth = 0; cellYear++; }
+          isOutside = true;
+        } else {
+          cellDay = i - firstDayOfWeek + 1;
+        }
+
+        const iso = toISO(cellYear, cellMonth, cellDay);
+        const isToday = iso === todayISO;
+        const dayTasks = byDate[iso] || [];
+
+        const pillsHtml = dayTasks.map(task => {
+          const course = getCourseObj(task.courseId);
+          const pal = getPalette(course.color);
+          const isOverdue = getDueCategory(task) === 'overdue';
+          const timeShort = formatTime12h(task.dueTime);
+          const borderCls = isOverdue ? 'border-rose-500/60' : '';
+
+          return `
+            <div class="group flex items-start gap-1.5 px-1.5 py-1 rounded-lg border text-[11px] leading-tight transition ${pal.badge} ${borderCls} ${task.completed ? 'opacity-50 line-through' : ''}">
+              <button type="button" data-toggle-task="${task.id}" title="Mark complete" class="mt-0.5 w-3.5 h-3.5 rounded border flex items-center justify-center shrink-0 transition ${task.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-current opacity-60 hover:opacity-100'}">
+                ${task.completed ? '<svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>' : ''}
+              </button>
+              <button type="button" data-edit-task="${task.id}" class="flex-1 min-w-0 text-left truncate hover:underline" title="${escapeHtml(task.title)}${timeShort ? ' (' + timeShort + ')' : ''} — ${escapeHtml(course.name)}">
+                <span class="font-medium">${escapeHtml(task.title)}</span>
+                ${timeShort ? `<span class="block text-[9.5px] opacity-75">${timeShort}</span>` : ''}
+              </button>
+            </div>`;
+        }).join('');
+
+        html += `
+          <div class="min-h-[108px] sm:min-h-[124px] p-1.5 sm:p-2 flex flex-col gap-1 ${isOutside ? 'bg-slate-50/50 dark:bg-surface-950/40 opacity-50' : ''} ${isToday ? 'bg-indigo-500/[0.06] dark:bg-indigo-500/[0.08]' : ''}">
+            <div class="flex items-center justify-between">
+              <button type="button" data-pick-date="${iso}" title="Add task for ${iso}" class="w-6 h-6 rounded-full text-xs font-semibold flex items-center justify-center transition ${isToday ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-surface-800'}">
+                ${cellDay}
+              </button>
+              ${dayTasks.length ? `<span class="text-[10px] font-medium text-slate-400 dark:text-slate-500">${dayTasks.length}</span>` : ''}
+            </div>
+            <div class="space-y-1 overflow-y-auto max-h-28 pr-0.5">
+              ${pillsHtml}
+            </div>
+          </div>`;
+      }
+
+      document.getElementById('calendarGrid').innerHTML = html;
+    }
+
+    function renderList(filteredTasks) {
       const prioRank = { high: 3, medium: 2, low: 1 };
-      filtered.sort((a, b) => {
+      const sorted = [...filteredTasks].sort((a, b) => {
         if (state.sort === 'priorityDesc') {
           const diff = (prioRank[b.priority] || 1) - (prioRank[a.priority] || 1);
           if (diff !== 0) return diff;
         }
-        if (state.sort === 'newest') {
-          return (b.createdAt || 0) - (a.createdAt || 0);
-        }
+        if (state.sort === 'newest') return (b.createdAt || 0) - (a.createdAt || 0);
         const da = parseDueDateTime(a.dueDate, a.dueTime)?.getTime() || Infinity;
         const db = parseDueDateTime(b.dueDate, b.dueTime)?.getTime() || Infinity;
         return da - db;
       });
 
       const container = document.getElementById('taskList');
-      if (!filtered.length) {
+      if (!sorted.length) {
         container.innerHTML = `
           <div class="p-10 rounded-2xl bg-white dark:bg-surface-900 border border-dashed border-slate-300 dark:border-white/10 text-center">
             <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">No assignments here</p>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Add a new task above or switch your filter view.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Add a new task below or switch your filter view.</p>
           </div>`;
         return;
       }
 
-      container.innerHTML = filtered.map(task => {
+      container.innerHTML = sorted.map(task => {
         const course = getCourseObj(task.courseId);
         const palette = getPalette(course.color);
         const badge = formatDueBadge(task);
@@ -690,16 +824,13 @@
               <button type="button" data-toggle-task="${task.id}" aria-label="Toggle completion" class="mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition ${task.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 hover:border-indigo-500'}">
                 ${task.completed ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>' : ''}
               </button>
-
               <div class="flex-1 min-w-0">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <h3 class="text-sm font-semibold leading-snug break-words ${task.completed ? 'line-through text-slate-400 dark:text-slate-500' : ''}">${escapeHtml(task.title)}</h3>
                   <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium shrink-0 self-start sm:self-auto ${badge.cls}">
-                    <svg class="w-3 h-3 opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25"/></svg>
                     ${escapeHtml(badge.text)}
                   </span>
                 </div>
-
                 <div class="mt-2.5 flex flex-wrap items-center justify-between gap-2">
                   <div class="flex flex-wrap items-center gap-2">
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${palette.badge}">
@@ -710,12 +841,8 @@
                       <span class="w-1.5 h-1.5 rounded-full ${prioDot}"></span>
                       ${prioLabel}
                     </span>
-                    ${hasNotes ? `
-                      <button type="button" data-expand-notes="${task.id}" class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
-                        ${isExpanded ? 'Hide notes' : 'View notes'}
-                      </button>` : ''}
+                    ${hasNotes ? `<button type="button" data-expand-notes="${task.id}" class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline">${isExpanded ? 'Hide notes' : 'View notes'}</button>` : ''}
                   </div>
-
                   <div class="flex items-center gap-1">
                     <button type="button" data-edit-task="${task.id}" title="Edit task" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-surface-800 transition">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
@@ -725,15 +852,19 @@
                     </button>
                   </div>
                 </div>
-
-                ${hasNotes && isExpanded ? `
-                  <div class="mt-3 p-3 rounded-xl text-xs leading-relaxed bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-300">
-                    ${linkifyNotes(task.notes)}
-                  </div>` : ''}
+                ${hasNotes && isExpanded ? `<div class="mt-3 p-3 rounded-xl text-xs leading-relaxed bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-300">${linkifyNotes(task.notes)}</div>` : ''}
               </div>
             </div>
           </article>`;
       }).join('');
+    }
+
+    function renderAll() {
+      renderStatsAndTabs();
+      renderViewToggle();
+      const filtered = getFilteredTasks();
+      renderCalendar(filtered);
+      renderList(filtered);
     }
 
     function renderCoursesModal() {
@@ -766,10 +897,49 @@
       m.classList.remove('flex');
     }
 
+    function openEditTaskModal(taskId) {
+      const task = state.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      document.getElementById('editTaskId').value = task.id;
+      document.getElementById('editTitleInput').value = task.title;
+      document.getElementById('editCourseInput').value = task.courseId;
+      document.getElementById('editPriorityInput').value = task.priority;
+      document.getElementById('editDateInput').value = task.dueDate;
+      document.getElementById('editTimeInput').value = task.dueTime || '';
+      document.getElementById('editNotesInput').value = task.notes || '';
+      openModal('editModal');
+    }
+
     // ---------- Event Listeners ----------
     document.getElementById('themeToggleBtn').addEventListener('click', () => {
       const isDark = document.documentElement.classList.toggle('dark');
       localStorage.setItem(STORAGE_KEYS.theme, isDark ? 'dark' : 'light');
+    });
+
+    document.getElementById('viewCalendarBtn').addEventListener('click', () => {
+      state.viewMode = 'calendar';
+      renderAll();
+    });
+    document.getElementById('viewListBtn').addEventListener('click', () => {
+      state.viewMode = 'list';
+      renderAll();
+    });
+
+    document.getElementById('calPrevBtn').addEventListener('click', () => {
+      state.calMonth--;
+      if (state.calMonth < 0) { state.calMonth = 11; state.calYear--; }
+      renderAll();
+    });
+    document.getElementById('calNextBtn').addEventListener('click', () => {
+      state.calMonth++;
+      if (state.calMonth > 11) { state.calMonth = 0; state.calYear++; }
+      renderAll();
+    });
+    document.getElementById('calTodayBtn').addEventListener('click', () => {
+      const n = new Date();
+      state.calYear = n.getFullYear();
+      state.calMonth = n.getMonth();
+      renderAll();
     });
 
     document.querySelectorAll('.priority-btn').forEach(btn => {
@@ -780,10 +950,8 @@
     });
 
     document.getElementById('toggleNotesBtn').addEventListener('click', () => {
-      const drawer = document.getElementById('notesDrawer');
-      const chev = document.getElementById('notesChevron');
-      drawer.classList.toggle('hidden');
-      chev.classList.toggle('rotate-90');
+      document.getElementById('notesDrawer').classList.toggle('hidden');
+      document.getElementById('notesChevron').classList.toggle('rotate-90');
     });
 
     document.getElementById('addTaskForm').addEventListener('submit', e => {
@@ -792,7 +960,7 @@
       const dueDate = document.getElementById('taskDateInput').value;
       if (!title || !dueDate) return;
 
-      const newTask = {
+      state.tasks.push({
         id: 't-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
         title,
         courseId: document.getElementById('taskCourseInput').value,
@@ -802,11 +970,15 @@
         notes: document.getElementById('taskNotesInput').value.trim(),
         completed: false,
         createdAt: Date.now()
-      };
+      });
 
-      state.tasks.push(newTask);
+      // Jump calendar to the month of the newly added task
+      const [y, m] = dueDate.split('-').map(Number);
+      state.calYear = y;
+      state.calMonth = m - 1;
+
       saveTasks();
-      renderTasks();
+      renderAll();
 
       document.getElementById('taskTitleInput').value = '';
       document.getElementById('taskTimeInput').value = '';
@@ -817,76 +989,77 @@
     document.querySelectorAll('.filter-tab').forEach(btn => {
       btn.addEventListener('click', () => {
         state.filter = btn.dataset.filter;
-        renderTasks();
+        renderAll();
       });
     });
 
     document.querySelectorAll('[data-stat-filter]').forEach(btn => {
       btn.addEventListener('click', () => {
         state.filter = btn.dataset.statFilter;
-        renderTasks();
+        renderAll();
       });
     });
 
     document.getElementById('searchInput').addEventListener('input', e => {
       state.search = e.target.value;
-      renderTasks();
+      renderAll();
     });
 
     document.getElementById('courseFilterSelect').addEventListener('change', e => {
       state.courseFilter = e.target.value;
-      renderTasks();
+      renderAll();
     });
 
     document.getElementById('sortSelect').addEventListener('change', e => {
       state.sort = e.target.value;
-      renderTasks();
+      renderAll();
     });
 
-    document.getElementById('taskList').addEventListener('click', e => {
-      const toggleBtn = e.target.closest('[data-toggle-task]');
-      if (toggleBtn) {
-        const task = state.tasks.find(t => t.id === toggleBtn.dataset.toggleTask);
-        if (task) {
-          task.completed = !task.completed;
+    // Shared click handler for Calendar & List views
+    ['calendarGrid', 'taskList'].forEach(id => {
+      document.getElementById(id).addEventListener('click', e => {
+        const pickDateBtn = e.target.closest('[data-pick-date]');
+        if (pickDateBtn) {
+          document.getElementById('taskDateInput').value = pickDateBtn.dataset.pickDate;
+          document.getElementById('addTaskSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          document.getElementById('taskTitleInput').focus();
+          return;
+        }
+
+        const toggleBtn = e.target.closest('[data-toggle-task]');
+        if (toggleBtn) {
+          const task = state.tasks.find(t => t.id === toggleBtn.dataset.toggleTask);
+          if (task) {
+            task.completed = !task.completed;
+            saveTasks();
+            renderAll();
+          }
+          return;
+        }
+
+        const expandBtn = e.target.closest('[data-expand-notes]');
+        if (expandBtn) {
+          const tid = expandBtn.dataset.expandNotes;
+          if (state.expandedNotes.has(tid)) state.expandedNotes.delete(tid);
+          else state.expandedNotes.add(tid);
+          renderAll();
+          return;
+        }
+
+        const editBtn = e.target.closest('[data-edit-task]');
+        if (editBtn) {
+          openEditTaskModal(editBtn.dataset.editTask);
+          return;
+        }
+
+        const delBtn = e.target.closest('[data-delete-task]');
+        if (delBtn) {
+          state.tasks = state.tasks.filter(t => t.id !== delBtn.dataset.deleteTask);
           saveTasks();
-          renderTasks();
+          renderAll();
+          showToast('Task deleted');
         }
-        return;
-      }
-
-      const expandBtn = e.target.closest('[data-expand-notes]');
-      if (expandBtn) {
-        const id = expandBtn.dataset.expandNotes;
-        if (state.expandedNotes.has(id)) state.expandedNotes.delete(id);
-        else state.expandedNotes.add(id);
-        renderTasks();
-        return;
-      }
-
-      const editBtn = e.target.closest('[data-edit-task]');
-      if (editBtn) {
-        const task = state.tasks.find(t => t.id === editBtn.dataset.editTask);
-        if (task) {
-          document.getElementById('editTaskId').value = task.id;
-          document.getElementById('editTitleInput').value = task.title;
-          document.getElementById('editCourseInput').value = task.courseId;
-          document.getElementById('editPriorityInput').value = task.priority;
-          document.getElementById('editDateInput').value = task.dueDate;
-          document.getElementById('editTimeInput').value = task.dueTime || '';
-          document.getElementById('editNotesInput').value = task.notes || '';
-          openModal('editModal');
-        }
-        return;
-      }
-
-      const delBtn = e.target.closest('[data-delete-task]');
-      if (delBtn) {
-        state.tasks = state.tasks.filter(t => t.id !== delBtn.dataset.deleteTask);
-        saveTasks();
-        renderTasks();
-        showToast('Task deleted');
-      }
+      });
     });
 
     document.getElementById('editTaskForm').addEventListener('submit', e => {
@@ -901,9 +1074,18 @@
       task.dueTime = document.getElementById('editTimeInput').value || '';
       task.notes = document.getElementById('editNotesInput').value.trim();
       saveTasks();
-      renderTasks();
+      renderAll();
       closeModal('editModal');
       showToast('Changes saved');
+    });
+
+    document.getElementById('modalDeleteTaskBtn').addEventListener('click', () => {
+      const id = document.getElementById('editTaskId').value;
+      state.tasks = state.tasks.filter(t => t.id !== id);
+      saveTasks();
+      renderAll();
+      closeModal('editModal');
+      showToast('Task deleted');
     });
 
     // Courses Modal
@@ -927,11 +1109,7 @@
       const input = document.getElementById('newCourseNameInput');
       const name = input.value.trim();
       if (!name) return;
-      state.courses.push({
-        id: 'c-' + Date.now(),
-        name,
-        color: state.selectedCourseColor
-      });
+      state.courses.push({ id: 'c-' + Date.now(), name, color: state.selectedCourseColor });
       saveCourses();
       renderCourseDropdowns();
       renderCoursesModal();
@@ -946,7 +1124,7 @@
       saveCourses();
       renderCourseDropdowns();
       renderCoursesModal();
-      renderTasks();
+      renderAll();
     });
 
     // Backup & Restore
@@ -1003,7 +1181,7 @@
           saveTasks();
           saveCourses();
           renderCourseDropdowns();
-          renderTasks();
+          renderAll();
 
           statusEl.textContent = `Imported ${data.tasks.length} task(s) successfully.`;
           statusEl.className = 'text-xs text-emerald-600 dark:text-emerald-400';
@@ -1017,7 +1195,7 @@
       reader.readAsText(file);
     });
 
-    // Close modals on X button, backdrop click, or Escape
+    // Close modals
     document.querySelectorAll('[data-close-modal]').forEach(btn => {
       btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
     });
@@ -1041,7 +1219,7 @@
     document.getElementById('taskDateInput').value = getTodayISO();
     renderCourseDropdowns();
     renderPriorityButtons();
-    renderTasks();
+    renderAll();
   </script>
 </body>
 </html>
