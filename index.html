@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DueFlow — Homework &amp; Task Tracker</title>
+  <title>DueFlow — Homework & Task Tracker</title>
 
   <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,15 +17,14 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
           colors: {
-            canvas: {
-              dark: '#0d0d0f',
-              card: '#16161a',
-              elevated: '#1d1d23',
-              border: '#26262f',
+            surface: {
+              950: '#0b0c10',
+              900: '#111318',
+              850: '#161922',
+              800: '#1c202b',
+              700: '#272c3a',
             }
           }
         }
@@ -34,132 +33,66 @@
   </script>
 
   <style>
-    /* Smooth typography & custom scrollbar */
-    html {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .dark color-scheme, .dark input[type="date"], .dark input[type="time"] { color-scheme: dark; }
+    .task-enter { animation: fadeSlideIn 0.2s ease-out; }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Native date/time picker icon contrast in dark mode */
-    .dark input[type="date"]::-webkit-calendar-picker-indicator,
-    .dark input[type="time"]::-webkit-calendar-picker-indicator {
-      filter: invert(0.85);
-      cursor: pointer;
-    }
-
-    /* Custom subtle scrollbars */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .dark ::-webkit-scrollbar-thumb {
-      background: #2a2a35;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #d4d4d8;
-      border-radius: 9999px;
-    }
-
-    /* Animated strikethrough for completed task titles */
-    .task-title-strike {
-      position: relative;
-      display: inline;
-      background-image: linear-gradient(currentColor, currentColor);
-      background-position: 0% 55%;
-      background-repeat: no-repeat;
-      background-size: 0% 1.5px;
-      transition: background-size 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.25s ease;
-    }
-    .task-title-strike.is-completed {
-      background-size: 100% 1.5px;
-    }
-
-    /* Smooth accordion for expandable notes */
-    .notes-drawer {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.24s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    .notes-drawer.open {
-      grid-template-rows: 1fr;
-    }
-    .notes-drawer > div {
-      overflow: hidden;
-    }
-
-    /* Hide scrollbar for horizontal filter pills on mobile */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    /* Toast entrance animation */
-    @keyframes slideUpFade {
-      from {
-        opacity: 0;
-        transform: translateY(12px) scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-    .toast-enter {
-      animation: slideUpFade 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.25); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.45); }
   </style>
 </head>
 
-<body class="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-canvas-dark dark:text-zinc-100 transition-colors duration-200 selection:bg-indigo-500/30 selection:text-indigo-200">
-
-  <!-- Top Navigation Bar -->
-  <header class="sticky top-0 z-30 backdrop-blur-md bg-white/80 dark:bg-canvas-dark/80 border-b border-zinc-200 dark:border-canvas-border">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-      <!-- Brand -->
+<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-surface-950 dark:text-slate-100 transition-colors duration-200">
+  <!-- Header -->
+  <header class="sticky top-0 z-30 border-b border-slate-200/80 dark:border-white/5 bg-white/80 dark:bg-surface-950/80 backdrop-blur-md">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
       <div class="flex items-center gap-3 min-w-0">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+        <div class="w-9 h-9 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-500 dark:text-indigo-400 shrink-0 shadow-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <div class="min-w-0">
-          <h1 class="text-base sm:text-lg font-bold tracking-tight truncate leading-tight">DueFlow</h1>
-          <p class="text-[11px] text-zinc-500 dark:text-zinc-400 truncate hidden sm:block">Homework &amp; Assignment Tracker</p>
+        <div class="truncate">
+          <h1 class="text-base font-bold tracking-tight leading-tight">DueFlow</h1>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">Homework &amp; Assignment Tracker</p>
         </div>
       </div>
 
-      <!-- Right Controls: Sync Indicator, Manage Tags, Theme Toggle -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Cloud Sync Pill -->
-        <div id="syncStatus" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border text-zinc-600 dark:text-zinc-400">
-          <span id="syncDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span id="syncLabel" class="hidden sm:inline">Connecting...</span>
+      <div class="flex items-center gap-2">
+        <!-- Saved Locally Badge -->
+        <div title="Tasks & courses are saved permanently in this browser" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Saved Locally</span>
         </div>
 
-        <!-- Manage Categories Button -->
-        <button id="openCategoryModalBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-zinc-100 hover:bg-zinc-200 dark:bg-canvas-card dark:hover:bg-canvas-elevated border border-zinc-200 dark:border-canvas-border text-zinc-700 dark:text-zinc-200 transition cursor-pointer">
-          <svg class="w-4 h-4 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <!-- Backup Button -->
+        <button id="openBackupBtn" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700 border border-slate-200 dark:border-white/10 transition">
+          <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+          <span>Backup</span>
+        </button>
+
+        <!-- Courses Button -->
+        <button id="openCoursesBtn" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700 border border-slate-200 dark:border-white/10 transition">
+          <svg class="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
           </svg>
-          <span class="hidden sm:inline">Courses</span>
+          <span>Courses</span>
         </button>
 
         <!-- Theme Toggle -->
-        <button id="themeToggleBtn" type="button" aria-label="Toggle color theme" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-canvas-card dark:hover:bg-canvas-elevated border border-zinc-200 dark:border-canvas-border text-zinc-700 dark:text-zinc-300 transition cursor-pointer">
-          <!-- Sun Icon (shown in dark mode) -->
+        <button id="themeToggleBtn" type="button" title="Toggle light/dark mode" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 transition">
           <svg id="sunIcon" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
           </svg>
-          <!-- Moon Icon (shown in light mode) -->
           <svg id="moonIcon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
           </svg>
@@ -168,1643 +101,947 @@
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
-
-    <!-- Dashboard Quick Stats -->
-    <section aria-label="Assignment statistics" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-      <!-- Due Today -->
-      <button type="button" data-stat-filter="today" class="stat-card group text-left p-4 rounded-2xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border hover:border-amber-500/50 dark:hover:border-amber-500/40 transition-all shadow-sm dark:shadow-none cursor-pointer">
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <!-- Stat Cards -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <button type="button" data-stat-filter="today" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-amber-500/40 transition group">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Due Today</span>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Due Today</span>
           <span class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </span>
         </div>
-        <div id="statToday" class="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">0</div>
-        <p class="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1">Focus for today</p>
+        <div id="statToday" class="text-2xl font-bold tracking-tight">0</div>
+        <div class="text-[11px] text-slate-500 dark:text-slate-500 mt-0.5">Focus for today</div>
       </button>
 
-      <!-- Upcoming (Next 7 Days) -->
-      <button type="button" data-stat-filter="upcoming" class="stat-card group text-left p-4 rounded-2xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border hover:border-indigo-500/50 dark:hover:border-indigo-500/40 transition-all shadow-sm dark:shadow-none cursor-pointer">
+      <button type="button" data-stat-filter="upcoming" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-indigo-500/40 transition group">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Upcoming (7d)</span>
-          <span class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 flex items-center justify-center">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-            </svg>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Upcoming (7d)</span>
+          <span class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
           </span>
         </div>
-        <div id="statUpcoming" class="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">0</div>
-        <p class="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1">Next 7 days</p>
+        <div id="statUpcoming" class="text-2xl font-bold tracking-tight">0</div>
+        <div class="text-[11px] text-slate-500 dark:text-slate-500 mt-0.5">Next 7 days</div>
       </button>
 
-      <!-- Overdue -->
-      <button type="button" data-stat-filter="overdue" class="stat-card group text-left p-4 rounded-2xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border hover:border-rose-500/50 dark:hover:border-rose-500/40 transition-all shadow-sm dark:shadow-none cursor-pointer">
+      <button type="button" data-stat-filter="overdue" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-rose-500/40 transition group">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Overdue</span>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Overdue</span>
           <span class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-500 flex items-center justify-center">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-            </svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
           </span>
         </div>
-        <div id="statOverdue" class="text-2xl sm:text-3xl font-bold tracking-tight text-rose-500">0</div>
-        <p class="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1">Needs attention</p>
+        <div id="statOverdue" class="text-2xl font-bold tracking-tight text-rose-500">0</div>
+        <div class="text-[11px] text-slate-500 dark:text-slate-500 mt-0.5">Needs attention</div>
       </button>
 
-      <!-- Completed -->
-      <button type="button" data-stat-filter="completed" class="stat-card group text-left p-4 rounded-2xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border hover:border-emerald-500/50 dark:hover:border-emerald-500/40 transition-all shadow-sm dark:shadow-none cursor-pointer">
+      <button type="button" data-stat-filter="completed" class="text-left p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-emerald-500/40 transition group">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Completed</span>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Completed</span>
           <span class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
           </span>
         </div>
-        <div id="statCompleted" class="text-2xl sm:text-3xl font-bold tracking-tight text-emerald-500">0</div>
-        <p class="text-[11px] text-zinc-400 dark:text-zinc-500 mt-1">Finished work</p>
+        <div id="statCompleted" class="text-2xl font-bold tracking-tight text-emerald-500">0</div>
+        <div class="text-[11px] text-slate-500 dark:text-slate-500 mt-0.5">Finished work</div>
       </button>
     </section>
 
-    <!-- Quick-Add Task & Homework Form -->
-    <section aria-label="Add new homework or task" class="rounded-2xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border p-4 sm:p-5 shadow-sm dark:shadow-none">
-      <form id="quickAddForm" class="space-y-4">
-        <!-- Top Row: Title + Submit -->
+    <!-- Quick-Add Form -->
+    <section class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 shadow-sm">
+      <form id="addTaskForm" class="space-y-4">
         <div class="flex flex-col sm:flex-row gap-3">
-          <div class="relative flex-1">
-            <input
-              id="taskTitleInput"
-              type="text"
-              required
-              autocomplete="off"
-              placeholder="Add homework or task (e.g., Practice Problem Set 4)..."
-              class="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-sm sm:text-base text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-indigo-500 transition"
-            />
-          </div>
+          <input
+            id="taskTitleInput"
+            type="text"
+            required
+            placeholder="Add homework or task (e.g., Practice Problem Set 4)..."
+            class="flex-1 px-4 py-3 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+          />
           <button
             type="submit"
-            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white text-sm font-semibold shadow-lg shadow-indigo-600/20 transition cursor-pointer shrink-0"
+            class="px-5 py-3 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] transition shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-1.5 shrink-0"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
             <span>Add Task</span>
           </button>
         </div>
 
-        <!-- Metadata Row: Course, Due Date, Due Time, Priority -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
-          <!-- Course / Category -->
-          <div class="lg:col-span-3">
-            <label for="taskCategorySelect" class="block text-[11px] font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1.5">Course / Tag</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <!-- Course -->
+          <div>
+            <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Course / Tag</label>
             <div class="flex gap-1.5">
-              <select
-                id="taskCategorySelect"
-                class="w-full px-3 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-xs sm:text-sm text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 transition cursor-pointer"
-              ></select>
-              <button
-                type="button"
-                id="inlineAddCatBtn"
-                title="Add custom course or category"
-                class="px-2.5 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-canvas-elevated dark:hover:bg-zinc-800 border border-zinc-200 dark:border-canvas-border text-zinc-600 dark:text-zinc-300 transition cursor-pointer shrink-0"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-              </button>
+              <select id="taskCourseInput" class="flex-1 min-w-0 px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"></select>
+              <button id="quickAddCourseBtn" type="button" title="Add or manage courses" class="px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 transition">+</button>
             </div>
           </div>
 
           <!-- Due Date -->
-          <div class="lg:col-span-3">
-            <label for="taskDueDateInput" class="block text-[11px] font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1.5">Due Date</label>
-            <input
-              id="taskDueDateInput"
-              type="date"
-              required
-              class="w-full px-3 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-xs sm:text-sm text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 transition"
-            />
+          <div>
+            <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Due Date</label>
+            <input id="taskDateInput" type="date" required class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
           </div>
 
-          <!-- Optional Due Time -->
-          <div class="lg:col-span-3">
-            <label for="taskDueTimeInput" class="block text-[11px] font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1.5">Time <span class="normal-case text-zinc-400 dark:text-zinc-500">(optional)</span></label>
-            <input
-              id="taskDueTimeInput"
-              type="time"
-              class="w-full px-3 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-xs sm:text-sm text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 transition"
-            />
+          <!-- Time -->
+          <div>
+            <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Time <span class="normal-case font-normal opacity-70">(optional)</span></label>
+            <input id="taskTimeInput" type="time" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
           </div>
 
-          <!-- Priority Selector -->
-          <div class="lg:col-span-3">
-            <span class="block text-[11px] font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1.5">Priority</span>
-            <div class="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-zinc-100 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border" id="priorityToggleGroup">
-              <button type="button" data-priority="low" class="priority-btn py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-400 transition cursor-pointer">Low</button>
-              <button type="button" data-priority="medium" class="priority-btn py-1.5 rounded-lg text-xs font-medium transition cursor-pointer">Med</button>
-              <button type="button" data-priority="high" class="priority-btn py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-400 transition cursor-pointer">High</button>
+          <!-- Priority -->
+          <div>
+            <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Priority</label>
+            <div class="grid grid-cols-3 p-1 rounded-xl bg-slate-100 dark:bg-surface-950 border border-slate-200 dark:border-white/10">
+              <button type="button" data-priority="low" class="priority-btn py-1.5 rounded-lg text-xs font-medium transition">Low</button>
+              <button type="button" data-priority="medium" class="priority-btn py-1.5 rounded-lg text-xs font-medium transition">Med</button>
+              <button type="button" data-priority="high" class="priority-btn py-1.5 rounded-lg text-xs font-medium transition">High</button>
             </div>
           </div>
         </div>
 
-        <!-- Expandable Notes Toggle & Textarea -->
+        <!-- Expandable Notes -->
         <div>
-          <button
-            type="button"
-            id="toggleFormNotesBtn"
-            class="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-indigo-500 dark:text-zinc-400 dark:hover:text-indigo-400 transition cursor-pointer"
-          >
-            <svg id="formNotesChevron" class="w-3.5 h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
+          <button id="toggleNotesBtn" type="button" class="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+            <svg id="notesChevron" class="w-3.5 h-3.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
             <span>Add homework details, links, or submission notes</span>
           </button>
-
-          <div id="formNotesWrapper" class="notes-drawer mt-2">
-            <div>
-              <textarea
-                id="taskNotesInput"
-                rows="3"
-                placeholder="Chapter sections, Canvas submission link, rubric notes, or group members..."
-                class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-xs sm:text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/60 transition resize-y"
-              ></textarea>
-            </div>
+          <div id="notesDrawer" class="hidden mt-2.5">
+            <textarea
+              id="taskNotesInput"
+              rows="2"
+              placeholder="Paste Canvas/Blackboard links, textbook pages, or instructions..."
+              class="w-full px-3.5 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-y"
+            ></textarea>
           </div>
         </div>
       </form>
     </section>
 
-    <!-- Controls: Filter Tabs, Search, Course Filter, Sort -->
-    <section aria-label="Filter and search assignments" class="space-y-3">
-      <!-- Filter Tabs Row -->
-      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="statusFilterTabs">
-        <button type="button" data-tab="active" class="filter-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition cursor-pointer">
-          All Active <span class="tab-count ml-1 text-[11px] opacity-75">0</span>
+    <!-- Filter & Search Controls -->
+    <section class="space-y-3">
+      <div class="flex flex-wrap items-center gap-2" id="filterTabs">
+        <button type="button" data-filter="active" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+          <span>All Active</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
         </button>
-        <button type="button" data-tab="today" class="filter-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition cursor-pointer">
-          Due Today <span class="tab-count ml-1 text-[11px] opacity-75">0</span>
+        <button type="button" data-filter="today" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+          <span>Due Today</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
         </button>
-        <button type="button" data-tab="upcoming" class="filter-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition cursor-pointer">
-          Upcoming <span class="tab-count ml-1 text-[11px] opacity-75">0</span>
+        <button type="button" data-filter="upcoming" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+          <span>Upcoming</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
         </button>
-        <button type="button" data-tab="overdue" class="filter-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition cursor-pointer">
-          Overdue <span class="tab-count ml-1 text-[11px] opacity-75">0</span>
+        <button type="button" data-filter="overdue" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+          <span>Overdue</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
         </button>
-        <button type="button" data-tab="completed" class="filter-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition cursor-pointer">
-          Completed <span class="tab-count ml-1 text-[11px] opacity-75">0</span>
+        <button type="button" data-filter="completed" class="filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+          <span>Completed</span><span class="tab-count px-1.5 py-0.5 rounded-md text-[10px]">0</span>
         </button>
       </div>
 
-      <!-- Search + Course Filter + Sort Bar -->
-      <div class="flex flex-col md:flex-row gap-2.5">
-        <!-- Search Input -->
+      <div class="flex flex-col sm:flex-row gap-2.5">
         <div class="relative flex-1">
-          <svg class="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
           <input
             id="searchInput"
             type="text"
             placeholder="Search assignments, courses, or notes... (press /)"
-            class="w-full pl-10 pr-9 py-2.5 rounded-xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition"
+            class="w-full pl-10 pr-4 py-2 rounded-xl text-sm bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
-          <button id="clearSearchBtn" type="button" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-lg text-zinc-400 hover:text-zinc-200 transition cursor-pointer" aria-label="Clear search">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
         </div>
 
-        <!-- Course Filter + Sort -->
-        <div class="flex gap-2.5">
-          <select
-            id="filterCategorySelect"
-            aria-label="Filter by course or category"
-            class="flex-1 md:w-44 px-3 py-2.5 rounded-xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition cursor-pointer"
-          >
-            <option value="all">All Courses</option>
-          </select>
+        <select id="courseFilterSelect" class="px-3.5 py-2 rounded-xl text-sm bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          <option value="all">All Courses</option>
+        </select>
 
-          <select
-            id="sortTasksSelect"
-            aria-label="Sort tasks"
-            class="flex-1 md:w-48 px-3 py-2.5 rounded-xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition cursor-pointer"
-          >
-            <option value="dueDate">Sort: Due Soonest</option>
-            <option value="priority">Sort: Highest Priority</option>
-            <option value="createdAt">Sort: Recently Added</option>
-          </select>
-        </div>
+        <select id="sortSelect" class="px-3.5 py-2 rounded-xl text-sm bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          <option value="dueAsc">Sort: Due Soonest</option>
+          <option value="priorityDesc">Sort: Highest Priority</option>
+          <option value="newest">Sort: Recently Added</option>
+        </select>
       </div>
     </section>
 
-    <!-- Task List Container -->
-    <section aria-label="Task list" class="min-h-[260px]">
-      <!-- Loading Skeleton -->
-      <div id="loadingState" class="space-y-3">
-        <div class="h-20 rounded-2xl bg-zinc-200/70 dark:bg-canvas-card animate-pulse"></div>
-        <div class="h-20 rounded-2xl bg-zinc-200/70 dark:bg-canvas-card animate-pulse"></div>
-        <div class="h-20 rounded-2xl bg-zinc-200/70 dark:bg-canvas-card animate-pulse"></div>
-      </div>
-
-      <!-- Tasks Grid / List -->
-      <div id="taskList" class="space-y-2.5 hidden"></div>
-
-      <!-- Empty State -->
-      <div id="emptyState" class="hidden rounded-2xl border border-dashed border-zinc-300 dark:border-canvas-border bg-white/60 dark:bg-canvas-card/50 p-10 sm:p-12 text-center">
-        <div class="w-12 h-12 mx-auto rounded-2xl bg-indigo-500/10 text-indigo-500 dark:text-indigo-400 flex items-center justify-center mb-4">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-          </svg>
-        </div>
-        <h3 id="emptyStateTitle" class="text-base font-semibold text-zinc-900 dark:text-white mb-1">No assignments yet</h3>
-        <p id="emptyStateSubtitle" class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto mb-5">
-          Add your first homework assignment, project deadline, or personal task above to stay ahead of schedule.
-        </p>
-        <button id="emptyStateActionBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-medium transition cursor-pointer">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-          <span id="emptyStateActionLabel">Add First Assignment</span>
-        </button>
-      </div>
-    </section>
+    <!-- Task List -->
+    <section id="taskList" class="space-y-2.5 pb-12"></section>
   </main>
 
   <!-- Edit Task Modal -->
-  <div id="editTaskModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-    <div class="w-full max-w-lg rounded-2xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border shadow-2xl overflow-hidden">
-      <div class="flex items-center justify-between px-5 py-4 border-b border-zinc-200 dark:border-canvas-border">
-        <h2 class="text-base font-semibold text-zinc-900 dark:text-white">Edit Assignment</h2>
-        <button type="button" data-close-modal="editTaskModal" class="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-canvas-elevated transition cursor-pointer">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+  <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="w-full max-w-lg rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <h2 class="text-base font-bold">Edit Assignment</h2>
+        <button type="button" data-close-modal="editModal" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-surface-800 text-slate-400">✕</button>
       </div>
-
       <form id="editTaskForm" class="p-5 space-y-4">
         <input type="hidden" id="editTaskId" />
-
         <div>
-          <label for="editTitleInput" class="block text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Title</label>
-          <input id="editTitleInput" type="text" required class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60" />
+          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Title</label>
+          <input id="editTitleInput" type="text" required class="w-full px-3.5 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
         </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label for="editCategorySelect" class="block text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Course / Tag</label>
-            <select id="editCategorySelect" class="w-full px-3 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60"></select>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Course / Tag</label>
+            <select id="editCourseInput" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"></select>
           </div>
           <div>
-            <label for="editPrioritySelect" class="block text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Priority</label>
-            <select id="editPrioritySelect" class="w-full px-3 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60">
-              <option value="low">Low Priority</option>
-              <option value="medium">Medium Priority</option>
-              <option value="high">High Priority</option>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Priority</label>
+            <select id="editPriorityInput" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
             </select>
           </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label for="editDueDateInput" class="block text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Due Date</label>
-            <input id="editDueDateInput" type="date" required class="w-full px-3 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60" />
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Due Date</label>
+            <input id="editDateInput" type="date" required class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
           </div>
           <div>
-            <label for="editDueTimeInput" class="block text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Due Time (Optional)</label>
-            <input id="editDueTimeInput" type="time" class="w-full px-3 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60" />
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Time (optional)</label>
+            <input id="editTimeInput" type="time" class="w-full px-3 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
           </div>
         </div>
-
         <div>
-          <label for="editNotesInput" class="block text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Notes / Homework Details</label>
-          <textarea id="editNotesInput" rows="3" placeholder="Instructions, links, submission notes..." class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/60 resize-y"></textarea>
+          <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Notes</label>
+          <textarea id="editNotesInput" rows="3" class="w-full px-3.5 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-y"></textarea>
         </div>
-
-        <div class="flex items-center justify-end gap-2 pt-2">
-          <button type="button" data-close-modal="editTaskModal" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-canvas-elevated transition cursor-pointer">
-            Cancel
-          </button>
-          <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-semibold shadow-md shadow-indigo-600/20 transition cursor-pointer">
-            Save Changes
-          </button>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" data-close-modal="editModal" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-700">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500">Save Changes</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Manage Courses / Categories Modal -->
-  <div id="categoryModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border shadow-2xl overflow-hidden">
-      <div class="flex items-center justify-between px-5 py-4 border-b border-zinc-200 dark:border-canvas-border">
-        <h2 class="text-base font-semibold text-zinc-900 dark:text-white">Courses &amp; Categories</h2>
-        <button type="button" data-close-modal="categoryModal" class="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-canvas-elevated transition cursor-pointer">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+  <!-- Courses Manager Modal -->
+  <div id="coursesModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <h2 class="text-base font-bold">Manage Courses &amp; Tags</h2>
+        <button type="button" data-close-modal="coursesModal" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-surface-800 text-slate-400">✕</button>
       </div>
-
-      <div class="p-5 space-y-5">
-        <!-- Add New Category Form -->
-        <form id="addCategoryForm" class="space-y-3">
-          <div>
-            <label for="newCategoryNameInput" class="block text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">New Course / Category Name</label>
-            <input
-              id="newCategoryNameInput"
-              type="text"
-              required
-              maxlength="28"
-              placeholder="e.g., ECON 301, Capstone, Marketing..."
-              class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/60"
-            />
+      <div class="p-5 space-y-4">
+        <form id="addCourseForm" class="space-y-3">
+          <div class="flex gap-2">
+            <input id="newCourseNameInput" type="text" required placeholder="e.g., FIN 325, BIA 261, ACC 315..." class="flex-1 px-3.5 py-2 rounded-xl text-sm bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500/50" />
+            <button type="submit" class="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500">Add</button>
           </div>
-
-          <div>
-            <span class="block text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-2">Color Accent</span>
-            <div id="colorPickerGroup" class="flex flex-wrap gap-2"></div>
-          </div>
-
-          <button type="submit" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition cursor-pointer">
-            Add Course Tag
-          </button>
+          <div class="flex items-center gap-2 flex-wrap" id="courseColorPicker"></div>
         </form>
+        <div id="courseList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+      </div>
+    </div>
+  </div>
 
-        <!-- Existing Categories List -->
-        <div class="border-t border-zinc-200 dark:border-canvas-border pt-4">
-          <p class="text-[11px] font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2.5">Active Tags</p>
-          <div id="categoryListContainer" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+  <!-- Backup & Restore Modal -->
+  <div id="backupModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+        <h2 class="text-base font-bold">Backup &amp; Restore</h2>
+        <button type="button" data-close-modal="backupModal" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-surface-800 text-slate-400">✕</button>
+      </div>
+      <div class="p-5 space-y-5">
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 space-y-2.5">
+          <div class="text-sm font-semibold">Export Backup</div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Download all your tasks and custom courses as a JSON file so you can move them to another browser or keep a safe copy.</p>
+          <button id="exportJsonBtn" type="button" class="w-full py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition">
+            Download Backup (.json)
+          </button>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/10 space-y-3">
+          <div class="text-sm font-semibold">Import Backup</div>
+          <div class="flex items-center gap-4 text-xs">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="radio" name="importMode" value="merge" checked class="accent-indigo-600" />
+              <span>Merge with existing</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="radio" name="importMode" value="replace" class="accent-indigo-600" />
+              <span>Replace all data</span>
+            </label>
+          </div>
+          <input id="importFileInput" type="file" accept=".json,application/json" class="hidden" />
+          <button id="importJsonBtn" type="button" class="w-full py-2.5 rounded-xl text-sm font-semibold bg-slate-200 hover:bg-slate-300 dark:bg-surface-800 dark:hover:bg-surface-700 transition">
+            Choose Backup File (.json)
+          </button>
+          <p id="importStatus" class="text-xs hidden"></p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Custom Delete Confirmation Modal -->
-  <div id="deleteConfirmModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-    <div class="w-full max-w-sm rounded-2xl bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border shadow-2xl p-5 space-y-4">
-      <div class="flex items-start gap-3">
-        <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-          </svg>
-        </div>
-        <div>
-          <h3 class="text-sm font-semibold text-zinc-900 dark:text-white">Delete assignment?</h3>
-          <p id="deleteConfirmText" class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">This action cannot be undone.</p>
-        </div>
-      </div>
-      <div class="flex items-center justify-end gap-2">
-        <button type="button" data-close-modal="deleteConfirmModal" class="px-3.5 py-2 rounded-xl text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-canvas-elevated transition cursor-pointer">
-          Cancel
-        </button>
-        <button id="confirmDeleteBtn" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition cursor-pointer">
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden px-4 py-2.5 rounded-xl text-xs font-semibold text-white bg-slate-900 dark:bg-indigo-600 shadow-xl"></div>
 
-  <!-- Toast Notification Container -->
-  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-  <!-- Application Logic & Firebase Cloud Storage -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import {
-      getAuth,
-      signInAnonymously,
-      signInWithCustomToken,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      doc,
-      addDoc,
-      updateDoc,
-      deleteDoc,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    // =========================================================================
-    // 1. CONFIGURATION & DESIGN TOKENS
-    // =========================================================================
-
-    /**
-     * Color palette definitions for course/category pills.
-     * Uses explicit Tailwind classes so the CDN JIT compiler generates every class cleanly.
-     */
-    const COLOR_PALETTE = {
-      indigo: {
-        label: 'Indigo',
-        swatch: 'bg-indigo-500',
-        pill: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border-indigo-500/25',
-        dot: 'bg-indigo-500'
-      },
-      emerald: {
-        label: 'Emerald',
-        swatch: 'bg-emerald-500',
-        pill: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/25',
-        dot: 'bg-emerald-500'
-      },
-      amber: {
-        label: 'Amber',
-        swatch: 'bg-amber-500',
-        pill: 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/25',
-        dot: 'bg-amber-500'
-      },
-      rose: {
-        label: 'Rose',
-        swatch: 'bg-rose-500',
-        pill: 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/25',
-        dot: 'bg-rose-500'
-      },
-      sky: {
-        label: 'Sky',
-        swatch: 'bg-sky-500',
-        pill: 'bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/25',
-        dot: 'bg-sky-500'
-      },
-      violet: {
-        label: 'Violet',
-        swatch: 'bg-violet-500',
-        pill: 'bg-violet-500/15 text-violet-700 dark:text-violet-300 border-violet-500/25',
-        dot: 'bg-violet-500'
-      },
-      orange: {
-        label: 'Orange',
-        swatch: 'bg-orange-500',
-        pill: 'bg-orange-500/15 text-orange-700 dark:text-orange-300 border-orange-500/25',
-        dot: 'bg-orange-500'
-      },
-      zinc: {
-        label: 'Slate',
-        swatch: 'bg-zinc-500',
-        pill: 'bg-zinc-500/15 text-zinc-700 dark:text-zinc-300 border-zinc-500/25',
-        dot: 'bg-zinc-400'
-      }
+  <script>
+    // ---------- Storage Keys & Defaults ----------
+    const STORAGE_KEYS = {
+      tasks: 'dueflow_tasks_v1',
+      courses: 'dueflow_courses_v1',
+      theme: 'dueflow_theme_v1'
     };
 
-    /** Default courses/categories provided out of the box */
-    const DEFAULT_CATEGORIES = [
-      { id: 'default-finance', name: 'Finance', color: 'emerald', isDefault: true },
-      { id: 'default-analytics', name: 'Analytics', color: 'indigo', isDefault: true },
-      { id: 'default-accounting', name: 'Accounting', color: 'amber', isDefault: true },
-      { id: 'default-clubs', name: 'Clubs', color: 'violet', isDefault: true },
-      { id: 'default-personal', name: 'Personal', color: 'sky', isDefault: true }
+    const COLOR_PALETTE = [
+      { id: 'indigo', dot: 'bg-indigo-500', badge: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border-indigo-500/25' },
+      { id: 'emerald', dot: 'bg-emerald-500', badge: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border-emerald-500/25' },
+      { id: 'amber', dot: 'bg-amber-500', badge: 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border-amber-500/25' },
+      { id: 'rose', dot: 'bg-rose-500', badge: 'bg-rose-500/15 text-rose-600 dark:text-rose-300 border-rose-500/25' },
+      { id: 'sky', dot: 'bg-sky-500', badge: 'bg-sky-500/15 text-sky-600 dark:text-sky-300 border-sky-500/25' },
+      { id: 'violet', dot: 'bg-violet-500', badge: 'bg-violet-500/15 text-violet-600 dark:text-violet-300 border-violet-500/25' },
+      { id: 'orange', dot: 'bg-orange-500', badge: 'bg-orange-500/15 text-orange-600 dark:text-orange-300 border-orange-500/25' },
+      { id: 'teal', dot: 'bg-teal-500', badge: 'bg-teal-500/15 text-teal-600 dark:text-teal-300 border-teal-500/25' }
     ];
 
-    const PRIORITY_WEIGHT = { high: 3, medium: 2, low: 1 };
+    const DEFAULT_COURSES = [
+      { id: 'c-finance', name: 'Finance', color: 'emerald' },
+      { id: 'c-analytics', name: 'Analytics', color: 'indigo' },
+      { id: 'c-accounting', name: 'Accounting', color: 'amber' },
+      { id: 'c-clubs', name: 'Clubs', color: 'violet' },
+      { id: 'c-personal', name: 'Personal', color: 'sky' }
+    ];
 
-    // =========================================================================
-    // 2. APPLICATION STATE
-    // =========================================================================
-    const state = {
+    // ---------- App State ----------
+    let state = {
       tasks: [],
-      customCategories: [],
-      activeTab: 'active',       // 'active' | 'today' | 'upcoming' | 'overdue' | 'completed'
-      categoryFilter: 'all',
-      sortBy: 'dueDate',         // 'dueDate' | 'priority' | 'createdAt'
-      searchQuery: '',
-      formPriority: 'medium',
-      selectedNewCatColor: 'indigo',
-      expandedNotesIds: new Set(),
-      pendingDeleteTaskId: null,
-      isCloudMode: false,
-      isLoaded: false
+      courses: [],
+      filter: 'active',
+      courseFilter: 'all',
+      sort: 'dueAsc',
+      search: '',
+      selectedPriority: 'medium',
+      selectedCourseColor: 'indigo',
+      expandedNotes: new Set()
     };
 
-    // Firebase references
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'dueflow-default';
-    let db = null;
-    let auth = null;
-    let currentUser = null;
-    let unsubscribeTasks = null;
-    let unsubscribeCategories = null;
+    // ---------- Persistence ----------
+    function loadState() {
+      try {
+        const savedTasks = JSON.parse(localStorage.getItem(STORAGE_KEYS.tasks));
+        state.tasks = Array.isArray(savedTasks) ? savedTasks : [];
+      } catch { state.tasks = []; }
 
-    // =========================================================================
-    // 3. DOM REFERENCES
-    // =========================================================================
-    const dom = {
-      syncDot: document.getElementById('syncDot'),
-      syncLabel: document.getElementById('syncLabel'),
-      themeToggleBtn: document.getElementById('themeToggleBtn'),
-      openCategoryModalBtn: document.getElementById('openCategoryModalBtn'),
-      inlineAddCatBtn: document.getElementById('inlineAddCatBtn'),
+      try {
+        const savedCourses = JSON.parse(localStorage.getItem(STORAGE_KEYS.courses));
+        state.courses = Array.isArray(savedCourses) && savedCourses.length ? savedCourses : [...DEFAULT_COURSES];
+      } catch { state.courses = [...DEFAULT_COURSES]; }
 
-      // Stats
-      statToday: document.getElementById('statToday'),
-      statUpcoming: document.getElementById('statUpcoming'),
-      statOverdue: document.getElementById('statOverdue'),
-      statCompleted: document.getElementById('statCompleted'),
-
-      // Quick-Add Form
-      quickAddForm: document.getElementById('quickAddForm'),
-      taskTitleInput: document.getElementById('taskTitleInput'),
-      taskCategorySelect: document.getElementById('taskCategorySelect'),
-      taskDueDateInput: document.getElementById('taskDueDateInput'),
-      taskDueTimeInput: document.getElementById('taskDueTimeInput'),
-      priorityToggleGroup: document.getElementById('priorityToggleGroup'),
-      toggleFormNotesBtn: document.getElementById('toggleFormNotesBtn'),
-      formNotesChevron: document.getElementById('formNotesChevron'),
-      formNotesWrapper: document.getElementById('formNotesWrapper'),
-      taskNotesInput: document.getElementById('taskNotesInput'),
-
-      // Filters & Search
-      statusFilterTabs: document.getElementById('statusFilterTabs'),
-      searchInput: document.getElementById('searchInput'),
-      clearSearchBtn: document.getElementById('clearSearchBtn'),
-      filterCategorySelect: document.getElementById('filterCategorySelect'),
-      sortTasksSelect: document.getElementById('sortTasksSelect'),
-
-      // Task List & States
-      loadingState: document.getElementById('loadingState'),
-      taskList: document.getElementById('taskList'),
-      emptyState: document.getElementById('emptyState'),
-      emptyStateTitle: document.getElementById('emptyStateTitle'),
-      emptyStateSubtitle: document.getElementById('emptyStateSubtitle'),
-      emptyStateActionBtn: document.getElementById('emptyStateActionBtn'),
-      emptyStateActionLabel: document.getElementById('emptyStateActionLabel'),
-
-      // Edit Modal
-      editTaskModal: document.getElementById('editTaskModal'),
-      editTaskForm: document.getElementById('editTaskForm'),
-      editTaskId: document.getElementById('editTaskId'),
-      editTitleInput: document.getElementById('editTitleInput'),
-      editCategorySelect: document.getElementById('editCategorySelect'),
-      editPrioritySelect: document.getElementById('editPrioritySelect'),
-      editDueDateInput: document.getElementById('editDueDateInput'),
-      editDueTimeInput: document.getElementById('editDueTimeInput'),
-      editNotesInput: document.getElementById('editNotesInput'),
-
-      // Category Modal
-      categoryModal: document.getElementById('categoryModal'),
-      addCategoryForm: document.getElementById('addCategoryForm'),
-      newCategoryNameInput: document.getElementById('newCategoryNameInput'),
-      colorPickerGroup: document.getElementById('colorPickerGroup'),
-      categoryListContainer: document.getElementById('categoryListContainer'),
-
-      // Delete Modal
-      deleteConfirmModal: document.getElementById('deleteConfirmModal'),
-      deleteConfirmText: document.getElementById('deleteConfirmText'),
-      confirmDeleteBtn: document.getElementById('confirmDeleteBtn'),
-
-      // Toast
-      toastContainer: document.getElementById('toastContainer')
-    };
-
-    // =========================================================================
-    // 4. DATE & FORMATTING UTILITIES
-    // =========================================================================
-
-    /** Returns today's date as YYYY-MM-DD in local timezone */
-    function getTodayDateString() {
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, '0');
-      const d = String(now.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
+      const savedTheme = localStorage.getItem(STORAGE_KEYS.theme) || 'dark';
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
     }
 
-    /** Computes day difference between dueDate (YYYY-MM-DD) and today (local midnight) */
-    function getDaysFromToday(dueDateStr) {
-      if (!dueDateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dueDateStr)) return 0;
-      const [y, m, d] = dueDateStr.split('-').map(Number);
-      const dueLocal = new Date(y, m - 1, d);
-      const now = new Date();
-      const todayLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      return Math.round((dueLocal - todayLocal) / (1000 * 60 * 60 * 24));
+    function saveTasks() {
+      localStorage.setItem(STORAGE_KEYS.tasks, JSON.stringify(state.tasks));
     }
 
-    /** Formats 24h time string ("23:59") to 12h readable time ("11:59 PM") */
+    function saveCourses() {
+      localStorage.setItem(STORAGE_KEYS.courses, JSON.stringify(state.courses));
+    }
+
+    // ---------- Date Utilities (Timezone Safe) ----------
+    function getTodayISO() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function parseDueDateTime(dateStr, timeStr) {
+      if (!dateStr) return null;
+      const [y, m, d] = dateStr.split('-').map(Number);
+      if (timeStr) {
+        const [hh, mm] = timeStr.split(':').map(Number);
+        return new Date(y, m - 1, d, hh, mm, 0, 0);
+      }
+      return new Date(y, m - 1, d, 23, 59, 59, 999);
+    }
+
+    function startOfDay(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function getDueCategory(task) {
+      if (task.completed) return 'completed';
+      const now = new Date();
+      const due = parseDueDateTime(task.dueDate, task.dueTime);
+      if (!due) return 'upcoming';
+      if (due < now) return 'overdue';
+      const todayStart = startOfDay(now);
+      const dueStart = startOfDay(due);
+      const diffDays = Math.round((dueStart - todayStart) / 86400000);
+      if (diffDays === 0) return 'today';
+      return 'upcoming';
+    }
+
+    function isWithinNext7Days(task) {
+      if (task.completed) return false;
+      const now = new Date();
+      const due = parseDueDateTime(task.dueDate, task.dueTime);
+      if (!due || due < now) return false;
+      const diffDays = Math.round((startOfDay(due) - startOfDay(now)) / 86400000);
+      return diffDays >= 0 && diffDays <= 7;
+    }
+
     function formatTime12h(timeStr) {
-      if (!timeStr) return '';
-      const [hourStr, minStr] = timeStr.split(':');
-      let hour = parseInt(hourStr, 10);
-      if (isNaN(hour)) return '';
-      const ampm = hour >= 12 ? 'PM' : 'AM';
-      hour = hour % 12 || 12;
-      return `${hour}:${minStr} ${ampm}`;
+      if (!timeStr) return '11:59 PM';
+      const [hh, mm] = timeStr.split(':').map(Number);
+      const suffix = hh >= 12 ? 'PM' : 'AM';
+      const h12 = hh % 12 || 12;
+      return `${h12}:${String(mm).padStart(2, '0')} ${suffix}`;
     }
 
-    /** Formats YYYY-MM-DD into a compact date like "Nov 24" (or "Nov 24, 2027" if different year) */
-    function formatShortDate(dueDateStr) {
-      if (!dueDateStr) return '';
-      const [y, m, d] = dueDateStr.split('-').map(Number);
-      const date = new Date(y, m - 1, d);
-      const currentYear = new Date().getFullYear();
-      const opts = { month: 'short', day: 'numeric' };
-      if (y !== currentYear) opts.year = 'numeric';
-      return date.toLocaleDateString(undefined, opts);
-    }
+    function formatDueBadge(task) {
+      const due = parseDueDateTime(task.dueDate, task.dueTime);
+      if (!due) return { text: 'No due date', cls: 'bg-slate-100 dark:bg-surface-800 text-slate-500' };
 
-    /**
-     * Generates relative countdown label and badge style for a task.
-     */
-    function getDueBadgeInfo(task) {
-      const diff = getDaysFromToday(task.dueDate);
-      const shortDate = formatShortDate(task.dueDate);
-      const timeLabel = task.dueTime ? ` • ${formatTime12h(task.dueTime)}` : '';
+      const now = new Date();
+      const diffDays = Math.round((startOfDay(due) - startOfDay(now)) / 86400000);
+      const dateLabel = due.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      const timeLabel = formatTime12h(task.dueTime);
 
       if (task.completed) {
         return {
-          text: `${shortDate}${timeLabel}`,
-          classes: 'bg-zinc-100 dark:bg-canvas-elevated text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-canvas-border'
+          text: `${dateLabel} • ${timeLabel}`,
+          cls: 'bg-slate-100 dark:bg-surface-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-white/5'
         };
       }
 
-      if (diff < 0) {
-        const abs = Math.abs(diff);
+      if (due < now) {
+        const overdueText = diffDays === 0 ? 'Overdue today' : diffDays === -1 ? '1 day overdue' : `${Math.abs(diffDays)} days overdue`;
         return {
-          text: `${abs} ${abs === 1 ? 'day' : 'days'} overdue`,
-          subtext: `${shortDate}${timeLabel}`,
-          classes: 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30 font-semibold'
+          text: `${overdueText} (${dateLabel} • ${timeLabel})`,
+          cls: 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/25'
         };
       }
 
-      if (diff === 0) {
+      if (diffDays === 0) {
         return {
-          text: `Due Today${timeLabel}`,
-          subtext: shortDate,
-          classes: 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 font-semibold'
+          text: `Due Today (${timeLabel})`,
+          cls: 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/25'
         };
       }
 
-      if (diff === 1) {
+      if (diffDays === 1) {
         return {
-          text: `Tomorrow${timeLabel}`,
-          subtext: shortDate,
-          classes: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/25 font-medium'
-        };
-      }
-
-      if (diff <= 7) {
-        return {
-          text: `In ${diff} days`,
-          subtext: `${shortDate}${timeLabel}`,
-          classes: 'bg-zinc-100 dark:bg-canvas-elevated text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-canvas-border'
+          text: `Tomorrow (${dateLabel} • ${timeLabel})`,
+          cls: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-300 border border-indigo-500/25'
         };
       }
 
       return {
-        text: `${shortDate}${timeLabel}`,
-        subtext: `In ${diff} days`,
-        classes: 'bg-zinc-100 dark:bg-canvas-elevated text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-canvas-border'
+        text: `In ${diffDays} days (${dateLabel} • ${timeLabel})`,
+        cls: 'bg-slate-100 dark:bg-surface-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/5'
       };
     }
 
-    /** Safely escapes HTML characters */
+    // ---------- Helpers ----------
     function escapeHtml(str) {
-      return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+      return String(str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
     }
 
-    /** Escapes HTML and turns http(s) URLs into clickable links for homework notes */
-    function formatNotesHtml(notes) {
-      const safe = escapeHtml(notes);
-      const urlRegex = /(https?:\/\/[^\s<]+)/g;
-      return safe
-        .replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-indigo-500 dark:text-indigo-400 underline underline-offset-2 hover:text-indigo-400 break-all">$1</a>')
-        .replace(/\n/g, '<br>');
+    function linkifyNotes(text) {
+      const escaped = escapeHtml(text);
+      return escaped.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-indigo-500 dark:text-indigo-400 underline break-all">$1</a>').replace(/\n/g, '<br>');
     }
 
-    /** Returns merged list of default + user custom categories */
-    function getAllCategories() {
-      const map = new Map();
-      DEFAULT_CATEGORIES.forEach(c => map.set(c.name.toLowerCase(), c));
-      state.customCategories.forEach(c => map.set(c.name.toLowerCase(), c));
-      return Array.from(map.values());
+    function getCourseObj(courseId) {
+      return state.courses.find(c => c.id === courseId) || { id: courseId, name: 'General', color: 'indigo' };
     }
 
-    /** Looks up a category object by name */
-    function getCategoryByName(name) {
-      const found = getAllCategories().find(c => c.name.toLowerCase() === (name || '').toLowerCase());
-      return found || { name: name || 'General', color: 'zinc' };
+    function getPalette(colorId) {
+      return COLOR_PALETTE.find(p => p.id === colorId) || COLOR_PALETTE[0];
     }
 
-    // =========================================================================
-    // 5. TOAST NOTIFICATIONS & SYNC STATUS
-    // =========================================================================
-    function showToast(message, type = 'info') {
-      const toast = document.createElement('div');
-      const accent =
-        type === 'success' ? 'border-emerald-500/40 bg-white dark:bg-canvas-elevated text-zinc-900 dark:text-zinc-100' :
-        type === 'error' ? 'border-rose-500/40 bg-white dark:bg-canvas-elevated text-rose-600 dark:text-rose-300' :
-        'border-indigo-500/40 bg-white dark:bg-canvas-elevated text-zinc-900 dark:text-zinc-100';
-
-      const dot =
-        type === 'success' ? 'bg-emerald-500' :
-        type === 'error' ? 'bg-rose-500' : 'bg-indigo-500';
-
-      toast.className = `toast-enter pointer-events-auto flex items-center gap-2.5 px-4 py-2.5 rounded-xl border shadow-xl text-xs sm:text-sm font-medium ${accent}`;
-      toast.innerHTML = `<span class="w-2 h-2 rounded-full ${dot} shrink-0"></span><span>${escapeHtml(message)}</span>`;
-
-      dom.toastContainer.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(8px)';
-        toast.style.transition = 'all 0.2s ease';
-        setTimeout(() => toast.remove(), 220);
-      }, 2800);
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.add('hidden'), 2600);
     }
 
-    function setSyncStatus(status, label) {
-      dom.syncLabel.textContent = label;
-      dom.syncDot.className = 'w-2 h-2 rounded-full ' + (
-        status === 'synced' ? 'bg-emerald-500' :
-        status === 'error' ? 'bg-rose-500' :
-        status === 'local' ? 'bg-sky-500' :
-        'bg-amber-400 animate-pulse'
-      );
+    // ---------- Rendering ----------
+    function renderCourseDropdowns() {
+      const selects = [document.getElementById('taskCourseInput'), document.getElementById('editCourseInput')];
+      selects.forEach(sel => {
+        const prev = sel.value;
+        sel.innerHTML = state.courses.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
+        if (state.courses.some(c => c.id === prev)) sel.value = prev;
+      });
+
+      const filterSel = document.getElementById('courseFilterSelect');
+      const prevFilter = filterSel.value;
+      filterSel.innerHTML = `<option value="all">All Courses</option>` + state.courses.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
+      if (prevFilter === 'all' || state.courses.some(c => c.id === prevFilter)) {
+        filterSel.value = prevFilter;
+      } else {
+        filterSel.value = 'all';
+        state.courseFilter = 'all';
+      }
     }
 
-    // =========================================================================
-    // 6. FIREBASE INITIALIZATION & DATA OPERATIONS
-    // =========================================================================
-    async function initFirebase() {
-      try {
-        if (typeof __firebase_config === 'undefined' || !__firebase_config) {
-          // Graceful fallback if opened outside Firebase host environment
-          state.isCloudMode = false;
-          state.isLoaded = true;
-          setSyncStatus('local', 'Session Mode');
-          renderAll();
-          return;
-        }
-
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
-
-        // RULE 3: Authenticate FIRST using custom token if available, else anonymous
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
+    function renderPriorityButtons() {
+      document.querySelectorAll('.priority-btn').forEach(btn => {
+        const p = btn.dataset.priority;
+        const active = p === state.selectedPriority;
+        btn.className = 'priority-btn py-1.5 rounded-lg text-xs font-medium transition ';
+        if (active) {
+          if (p === 'low') btn.className += 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold';
+          else if (p === 'medium') btn.className += 'bg-amber-500/20 text-amber-600 dark:text-amber-300 font-semibold';
+          else btn.className += 'bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold';
         } else {
-          await signInAnonymously(auth);
+          btn.className += 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200';
         }
-
-        onAuthStateChanged(auth, (user) => {
-          currentUser = user;
-          if (!user) return;
-          state.isCloudMode = true;
-          setSyncStatus('synced', 'Cloud Synced');
-          attachFirestoreListeners(user.uid);
-        });
-      } catch (err) {
-        console.error('Firebase initialization failed:', err);
-        state.isCloudMode = false;
-        state.isLoaded = true;
-        setSyncStatus('error', 'Offline Mode');
-        showToast('Cloud sync unavailable — running in session mode.', 'error');
-        renderAll();
-      }
-    }
-
-    /**
-     * Attaches real-time listeners using STRICT user-scoped paths (RULE 1)
-     * and simple collection queries without orderBy/where (RULE 2).
-     */
-    function attachFirestoreListeners(userId) {
-      if (unsubscribeTasks) unsubscribeTasks();
-      if (unsubscribeCategories) unsubscribeCategories();
-
-      const tasksRef = collection(db, 'artifacts', appId, 'users', userId, 'tasks');
-      const categoriesRef = collection(db, 'artifacts', appId, 'users', userId, 'categories');
-
-      unsubscribeTasks = onSnapshot(
-        tasksRef,
-        (snapshot) => {
-          state.tasks = snapshot.docs.map(d => ({
-            id: d.id,
-            ...d.data()
-          }));
-          state.isLoaded = true;
-          setSyncStatus('synced', 'Cloud Synced');
-          renderAll();
-        },
-        (error) => {
-          console.error('Tasks listener error:', error);
-          state.isLoaded = true;
-          setSyncStatus('error', 'Sync Error');
-          showToast('Error syncing assignments from cloud.', 'error');
-          renderAll();
-        }
-      );
-
-      unsubscribeCategories = onSnapshot(
-        categoriesRef,
-        (snapshot) => {
-          state.customCategories = snapshot.docs.map(d => ({
-            id: d.id,
-            ...d.data(),
-            isDefault: false
-          }));
-          populateCategoryDropdowns();
-          renderCategoryManagerList();
-          renderTasks();
-        },
-        (error) => {
-          console.error('Categories listener error:', error);
-        }
-      );
-    }
-
-    // --- CRUD: Tasks ---
-    async function createTask(taskData) {
-      const payload = {
-        title: taskData.title.trim(),
-        category: taskData.category || 'Personal',
-        dueDate: taskData.dueDate,
-        dueTime: taskData.dueTime || '',
-        priority: taskData.priority || 'medium',
-        notes: (taskData.notes || '').trim(),
-        completed: false,
-        createdAt: Date.now()
-      };
-
-      if (state.isCloudMode) {
-        if (!currentUser) return;
-        try {
-          const tasksRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'tasks');
-          await addDoc(tasksRef, payload);
-          showToast('Assignment added', 'success');
-        } catch (err) {
-          console.error('Error adding task:', err);
-          showToast('Failed to save assignment', 'error');
-        }
-      } else {
-        state.tasks.unshift({ id: crypto.randomUUID(), ...payload });
-        renderAll();
-        showToast('Assignment added', 'success');
-      }
-    }
-
-    async function toggleTaskCompleted(taskId) {
-      const task = state.tasks.find(t => t.id === taskId);
-      if (!task) return;
-      const nextCompleted = !task.completed;
-
-      if (state.isCloudMode) {
-        if (!currentUser) return;
-        try {
-          const taskDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'tasks', taskId);
-          await updateDoc(taskDocRef, { completed: nextCompleted });
-          if (nextCompleted) showToast('Marked as completed', 'success');
-        } catch (err) {
-          console.error('Error toggling task:', err);
-          showToast('Could not update status', 'error');
-        }
-      } else {
-        task.completed = nextCompleted;
-        renderAll();
-        if (nextCompleted) showToast('Marked as completed', 'success');
-      }
-    }
-
-    async function updateTask(taskId, updates) {
-      if (state.isCloudMode) {
-        if (!currentUser) return;
-        try {
-          const taskDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'tasks', taskId);
-          await updateDoc(taskDocRef, updates);
-          showToast('Assignment updated', 'success');
-        } catch (err) {
-          console.error('Error updating task:', err);
-          showToast('Failed to update assignment', 'error');
-        }
-      } else {
-        const idx = state.tasks.findIndex(t => t.id === taskId);
-        if (idx !== -1) {
-          state.tasks[idx] = { ...state.tasks[idx], ...updates };
-          renderAll();
-          showToast('Assignment updated', 'success');
-        }
-      }
-    }
-
-    async function removeTask(taskId) {
-      if (state.isCloudMode) {
-        if (!currentUser) return;
-        try {
-          const taskDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'tasks', taskId);
-          await deleteDoc(taskDocRef);
-          showToast('Assignment deleted', 'info');
-        } catch (err) {
-          console.error('Error deleting task:', err);
-          showToast('Failed to delete assignment', 'error');
-        }
-      } else {
-        state.tasks = state.tasks.filter(t => t.id !== taskId);
-        renderAll();
-        showToast('Assignment deleted', 'info');
-      }
-    }
-
-    // --- CRUD: Custom Categories ---
-    async function addCustomCategory(name, color) {
-      const trimmed = name.trim();
-      if (!trimmed) return;
-
-      const exists = getAllCategories().some(c => c.name.toLowerCase() === trimmed.toLowerCase());
-      if (exists) {
-        showToast(`"${trimmed}" already exists`, 'error');
-        return;
-      }
-
-      const payload = { name: trimmed, color, createdAt: Date.now() };
-
-      if (state.isCloudMode) {
-        if (!currentUser) return;
-        try {
-          const catRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'categories');
-          await addDoc(catRef, payload);
-          showToast(`Added "${trimmed}" tag`, 'success');
-        } catch (err) {
-          console.error('Error adding category:', err);
-          showToast('Could not save course tag', 'error');
-        }
-      } else {
-        state.customCategories.push({ id: crypto.randomUUID(), ...payload, isDefault: false });
-        populateCategoryDropdowns();
-        renderCategoryManagerList();
-        showToast(`Added "${trimmed}" tag`, 'success');
-      }
-    }
-
-    async function deleteCustomCategory(catId) {
-      if (state.isCloudMode) {
-        if (!currentUser) return;
-        try {
-          const catDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'categories', catId);
-          await deleteDoc(catDocRef);
-          showToast('Course tag removed', 'info');
-        } catch (err) {
-          console.error('Error removing category:', err);
-          showToast('Failed to remove tag', 'error');
-        }
-      } else {
-        state.customCategories = state.customCategories.filter(c => c.id !== catId);
-        populateCategoryDropdowns();
-        renderCategoryManagerList();
-        showToast('Course tag removed', 'info');
-      }
-    }
-
-    // =========================================================================
-    // 7. FILTERING, SORTING & STATS COMPUTATION
-    // =========================================================================
-    function computeStats() {
-      let active = 0;
-      let today = 0;
-      let upcoming7d = 0;
-      let upcomingAll = 0;
-      let overdue = 0;
-      let completed = 0;
-
-      for (const task of state.tasks) {
-        if (task.completed) {
-          completed++;
-          continue;
-        }
-        active++;
-        const diff = getDaysFromToday(task.dueDate);
-        if (diff < 0) overdue++;
-        else if (diff === 0) today++;
-        else {
-          upcomingAll++;
-          if (diff <= 7) upcoming7d++;
-        }
-      }
-      return { active, today, upcoming7d, upcomingAll, overdue, completed };
-    }
-
-    function getFilteredAndSortedTasks() {
-      const q = state.searchQuery.trim().toLowerCase();
-
-      const filtered = state.tasks.filter(task => {
-        // 1. Status tab filter
-        const diff = getDaysFromToday(task.dueDate);
-        if (state.activeTab === 'active' && task.completed) return false;
-        if (state.activeTab === 'today' && (task.completed || diff !== 0)) return false;
-        if (state.activeTab === 'upcoming' && (task.completed || diff <= 0)) return false;
-        if (state.activeTab === 'overdue' && (task.completed || diff >= 0)) return false;
-        if (state.activeTab === 'completed' && !task.completed) return false;
-
-        // 2. Course / Category filter
-        if (state.categoryFilter !== 'all') {
-          if ((task.category || '').toLowerCase() !== state.categoryFilter.toLowerCase()) {
-            return false;
-          }
-        }
-
-        // 3. Live search filter
-        if (q) {
-          const hay = `${task.title || ''} ${task.category || ''} ${task.notes || ''}`.toLowerCase();
-          if (!hay.includes(q)) return false;
-        }
-
-        return true;
       });
-
-      // 4. Sort in JS memory
-      filtered.sort((a, b) => {
-        if (state.sortBy === 'priority') {
-          const pDiff = (PRIORITY_WEIGHT[b.priority] || 2) - (PRIORITY_WEIGHT[a.priority] || 2);
-          if (pDiff !== 0) return pDiff;
-          return (a.dueDate || '').localeCompare(b.dueDate || '');
-        }
-        if (state.sortBy === 'createdAt') {
-          return (b.createdAt || 0) - (a.createdAt || 0);
-        }
-        // Default: dueDate soonest first (with dueTime tie-breaker)
-        const dCmp = (a.dueDate || '9999-12-31').localeCompare(b.dueDate || '9999-12-31');
-        if (dCmp !== 0) return dCmp;
-        const tA = a.dueTime || '23:59';
-        const tB = b.dueTime || '23:59';
-        return tA.localeCompare(tB);
-      });
-
-      return filtered;
-    }
-
-    // =========================================================================
-    // 8. RENDERING FUNCTIONS
-    // =========================================================================
-    function renderAll() {
-      renderStatsAndTabs();
-      populateCategoryDropdowns();
-      renderTasks();
     }
 
     function renderStatsAndTabs() {
-      const stats = computeStats();
-
-      dom.statToday.textContent = stats.today;
-      dom.statUpcoming.textContent = stats.upcoming7d;
-      dom.statOverdue.textContent = stats.overdue;
-      dom.statCompleted.textContent = stats.completed;
-
-      const tabCounts = {
-        active: stats.active,
-        today: stats.today,
-        upcoming: stats.upcomingAll,
-        overdue: stats.overdue,
-        completed: stats.completed
-      };
-
-      dom.statusFilterTabs.querySelectorAll('.filter-tab').forEach(btn => {
-        const tab = btn.dataset.tab;
-        const isActive = tab === state.activeTab;
-        const countEl = btn.querySelector('.tab-count');
-        if (countEl) countEl.textContent = tabCounts[tab] ?? 0;
-
-        if (isActive) {
-          btn.className = 'filter-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/20';
+      const counts = { active: 0, today: 0, upcoming: 0, overdue: 0, completed: 0, upcoming7d: 0 };
+      state.tasks.forEach(t => {
+        const cat = getDueCategory(t);
+        if (t.completed) {
+          counts.completed++;
         } else {
-          btn.className = 'filter-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition cursor-pointer bg-white dark:bg-canvas-card border border-zinc-200 dark:border-canvas-border text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100';
+          counts.active++;
+          if (cat === 'today') counts.today++;
+          else if (cat === 'overdue') counts.overdue++;
+          else counts.upcoming++;
+          if (isWithinNext7Days(t)) counts.upcoming7d++;
         }
       });
-    }
 
-    function populateCategoryDropdowns() {
-      const categories = getAllCategories();
+      document.getElementById('statToday').textContent = counts.today;
+      document.getElementById('statUpcoming').textContent = counts.upcoming7d;
+      document.getElementById('statOverdue').textContent = counts.overdue;
+      document.getElementById('statCompleted').textContent = counts.completed;
 
-      // Preserve current selections
-      const prevFormVal = dom.taskCategorySelect.value;
-      const prevFilterVal = state.categoryFilter;
-      const prevEditVal = dom.editCategorySelect.value;
-
-      const optionsHtml = categories
-        .map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`)
-        .join('');
-
-      dom.taskCategorySelect.innerHTML = optionsHtml;
-      dom.editCategorySelect.innerHTML = optionsHtml;
-      dom.filterCategorySelect.innerHTML = `<option value="all">All Courses</option>` + optionsHtml;
-
-      if (prevFormVal && categories.some(c => c.name === prevFormVal)) {
-        dom.taskCategorySelect.value = prevFormVal;
-      }
-      if (prevEditVal && categories.some(c => c.name === prevEditVal)) {
-        dom.editCategorySelect.value = prevEditVal;
-      }
-      dom.filterCategorySelect.value = prevFilterVal;
-    }
-
-    function renderPriorityToggle() {
-      dom.priorityToggleGroup.querySelectorAll('.priority-btn').forEach(btn => {
-        const p = btn.dataset.priority;
-        const selected = p === state.formPriority;
-        let activeClass = '';
-        if (selected) {
-          if (p === 'high') activeClass = 'bg-rose-500/20 text-rose-600 dark:text-rose-300 ring-1 ring-rose-500/40 font-semibold';
-          else if (p === 'medium') activeClass = 'bg-amber-500/20 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/40 font-semibold';
-          else activeClass = 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/40 font-semibold';
+      document.querySelectorAll('.filter-tab').forEach(btn => {
+        const f = btn.dataset.filter;
+        const active = f === state.filter;
+        btn.querySelector('.tab-count').textContent = counts[f];
+        if (active) {
+          btn.className = 'filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 bg-indigo-600 text-white shadow-md shadow-indigo-600/20';
+          btn.querySelector('.tab-count').className = 'tab-count px-1.5 py-0.5 rounded-md text-[10px] bg-white/20 text-white';
         } else {
-          activeClass = 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200';
+          btn.className = 'filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 bg-white dark:bg-surface-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/5 hover:border-indigo-500/30';
+          btn.querySelector('.tab-count').className = 'tab-count px-1.5 py-0.5 rounded-md text-[10px] bg-slate-100 dark:bg-surface-800 text-slate-500 dark:text-slate-400';
         }
-        btn.className = `priority-btn py-1.5 rounded-lg text-xs transition cursor-pointer ${activeClass}`;
       });
     }
 
     function renderTasks() {
-      if (!state.isLoaded) {
-        dom.loadingState.classList.remove('hidden');
-        dom.taskList.classList.add('hidden');
-        dom.emptyState.classList.add('hidden');
-        return;
-      }
+      renderStatsAndTabs();
 
-      dom.loadingState.classList.add('hidden');
-      const tasks = getFilteredAndSortedTasks();
-
-      if (tasks.length === 0) {
-        dom.taskList.classList.add('hidden');
-        dom.emptyState.classList.remove('hidden');
-
-        const isFiltering = state.searchQuery.trim() !== '' || state.categoryFilter !== 'all' || state.activeTab !== 'active';
-        if (state.tasks.length === 0) {
-          dom.emptyStateTitle.textContent = 'No assignments yet';
-          dom.emptyStateSubtitle.textContent = 'Add your first homework assignment, project deadline, or personal task above to stay ahead of schedule.';
-          dom.emptyStateActionLabel.textContent = 'Add First Assignment';
-          dom.emptyStateActionBtn.dataset.mode = 'focus-add';
-        } else if (isFiltering) {
-          dom.emptyStateTitle.textContent = 'No matching assignments';
-          dom.emptyStateSubtitle.textContent = 'Try clearing your search or switching filter tabs to see your other tasks.';
-          dom.emptyStateActionLabel.textContent = 'Reset Filters';
-          dom.emptyStateActionBtn.dataset.mode = 'reset-filters';
-        } else {
-          dom.emptyStateTitle.textContent = 'All caught up!';
-          dom.emptyStateSubtitle.textContent = 'You have zero active assignments right now. Enjoy the breather or add your next deadline.';
-          dom.emptyStateActionLabel.textContent = 'Add New Assignment';
-          dom.emptyStateActionBtn.dataset.mode = 'focus-add';
+      const q = state.search.trim().toLowerCase();
+      let filtered = state.tasks.filter(t => {
+        const cat = getDueCategory(t);
+        if (state.filter === 'active' && t.completed) return false;
+        if (state.filter === 'today' && cat !== 'today') return false;
+        if (state.filter === 'upcoming' && cat !== 'upcoming') return false;
+        if (state.filter === 'overdue' && cat !== 'overdue') return false;
+        if (state.filter === 'completed' && !t.completed) return false;
+        if (state.courseFilter !== 'all' && t.courseId !== state.courseFilter) return false;
+        if (q) {
+          const courseName = getCourseObj(t.courseId).name.toLowerCase();
+          const haystack = `${t.title} ${t.notes || ''} ${courseName}`.toLowerCase();
+          if (!haystack.includes(q)) return false;
         }
+        return true;
+      });
+
+      const prioRank = { high: 3, medium: 2, low: 1 };
+      filtered.sort((a, b) => {
+        if (state.sort === 'priorityDesc') {
+          const diff = (prioRank[b.priority] || 1) - (prioRank[a.priority] || 1);
+          if (diff !== 0) return diff;
+        }
+        if (state.sort === 'newest') {
+          return (b.createdAt || 0) - (a.createdAt || 0);
+        }
+        const da = parseDueDateTime(a.dueDate, a.dueTime)?.getTime() || Infinity;
+        const db = parseDueDateTime(b.dueDate, b.dueTime)?.getTime() || Infinity;
+        return da - db;
+      });
+
+      const container = document.getElementById('taskList');
+      if (!filtered.length) {
+        container.innerHTML = `
+          <div class="p-10 rounded-2xl bg-white dark:bg-surface-900 border border-dashed border-slate-300 dark:border-white/10 text-center">
+            <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">No assignments here</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Add a new task above or switch your filter view.</p>
+          </div>`;
         return;
       }
 
-      dom.emptyState.classList.add('hidden');
-      dom.taskList.classList.remove('hidden');
+      container.innerHTML = filtered.map(task => {
+        const course = getCourseObj(task.courseId);
+        const palette = getPalette(course.color);
+        const badge = formatDueBadge(task);
+        const prioDot = task.priority === 'high' ? 'bg-rose-500' : task.priority === 'medium' ? 'bg-amber-500' : 'bg-emerald-500';
+        const prioText = task.priority === 'high' ? 'text-rose-500 dark:text-rose-400' : task.priority === 'medium' ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400';
+        const prioLabel = task.priority.charAt(0).toUpperCase() + task.priority.slice(1);
+        const hasNotes = Boolean(task.notes && task.notes.trim());
+        const isExpanded = state.expandedNotes.has(task.id);
 
-      dom.taskList.innerHTML = tasks.map(task => renderTaskCardHtml(task)).join('');
-    }
+        return `
+          <article class="task-enter p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10 transition ${task.completed ? 'opacity-65' : ''}">
+            <div class="flex items-start gap-3.5">
+              <button type="button" data-toggle-task="${task.id}" aria-label="Toggle completion" class="mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition ${task.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 hover:border-indigo-500'}">
+                ${task.completed ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>' : ''}
+              </button>
 
-    function renderTaskCardHtml(task) {
-      const cat = getCategoryByName(task.category);
-      const palette = COLOR_PALETTE[cat.color] || COLOR_PALETTE.zinc;
-      const due = getDueBadgeInfo(task);
-      const hasNotes = Boolean(task.notes && task.notes.trim().length > 0);
-      const isNotesOpen = state.expandedNotesIds.has(task.id);
-
-      const priorityMeta = {
-        high: { label: 'High', dot: 'bg-rose-500', text: 'text-rose-600 dark:text-rose-400' },
-        medium: { label: 'Medium', dot: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400' },
-        low: { label: 'Low', dot: 'bg-emerald-500', text: 'text-emerald-600 dark:text-emerald-400' }
-      }[task.priority] || { label: 'Medium', dot: 'bg-amber-500', text: 'text-amber-400' };
-
-      const isOverdueActive = !task.completed && getDaysFromToday(task.dueDate) < 0;
-      const cardBorderClass = isOverdueActive
-        ? 'border-rose-500/30 dark:border-rose-500/30'
-        : 'border-zinc-200 dark:border-canvas-border hover:border-zinc-300 dark:hover:border-zinc-700';
-
-      return `
-        <article data-task-id="${escapeHtml(task.id)}" class="group rounded-2xl bg-white dark:bg-canvas-card border ${cardBorderClass} p-4 transition-all duration-200 shadow-sm dark:shadow-none ${task.completed ? 'opacity-70' : ''}">
-          <div class="flex items-start gap-3.5">
-            <!-- Completion Checkbox -->
-            <button
-              type="button"
-              data-action="toggle"
-              aria-label="${task.completed ? 'Mark as incomplete' : 'Mark as completed'}"
-              class="mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-all cursor-pointer ${
-                task.completed
-                  ? 'bg-emerald-500 border-emerald-500 text-white shadow-sm shadow-emerald-500/30'
-                  : 'border-zinc-300 dark:border-zinc-600 hover:border-indigo-500 dark:hover:border-indigo-400 bg-transparent'
-              }"
-            >
-              ${task.completed ? `
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
-              ` : ''}
-            </button>
-
-            <!-- Main Content -->
-            <div class="flex-1 min-w-0">
-              <div class="flex flex-wrap items-start justify-between gap-2">
-                <!-- Title -->
-                <h3 class="text-sm sm:text-base font-medium leading-snug break-words ${task.completed ? 'text-zinc-400 dark:text-zinc-500' : 'text-zinc-900 dark:text-zinc-100'}">
-                  <span class="task-title-strike ${task.completed ? 'is-completed' : ''}">${escapeHtml(task.title)}</span>
-                </h3>
-
-                <!-- Due Date Badge -->
-                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] sm:text-xs shrink-0 ${due.classes}">
-                  <svg class="w-3.5 h-3.5 opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-                  </svg>
-                  <span>${escapeHtml(due.text)}</span>
-                  ${due.subtext ? `<span class="opacity-65 hidden sm:inline">(${escapeHtml(due.subtext)})</span>` : ''}
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <h3 class="text-sm font-semibold leading-snug break-words ${task.completed ? 'line-through text-slate-400 dark:text-slate-500' : ''}">${escapeHtml(task.title)}</h3>
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium shrink-0 self-start sm:self-auto ${badge.cls}">
+                    <svg class="w-3 h-3 opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25"/></svg>
+                    ${escapeHtml(badge.text)}
+                  </span>
                 </div>
-              </div>
 
-              <!-- Meta Row: Course Pill, Priority, Notes Toggle, Actions -->
-              <div class="flex flex-wrap items-center justify-between gap-2 mt-2.5">
-                <div class="flex flex-wrap items-center gap-2">
-                  <!-- Course Pill -->
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-medium ${palette.pill}">
-                    <span class="w-1.5 h-1.5 rounded-full ${palette.dot}"></span>
-                    ${escapeHtml(task.category || 'General')}
-                  </span>
+                <div class="mt-2.5 flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${palette.badge}">
+                      <span class="w-1.5 h-1.5 rounded-full ${palette.dot}"></span>
+                      ${escapeHtml(course.name)}
+                    </span>
+                    <span class="inline-flex items-center gap-1 text-[11px] font-medium ${prioText}">
+                      <span class="w-1.5 h-1.5 rounded-full ${prioDot}"></span>
+                      ${prioLabel}
+                    </span>
+                    ${hasNotes ? `
+                      <button type="button" data-expand-notes="${task.id}" class="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline">
+                        ${isExpanded ? 'Hide notes' : 'View notes'}
+                      </button>` : ''}
+                  </div>
 
-                  <!-- Priority Indicator -->
-                  <span class="inline-flex items-center gap-1.5 text-[11px] font-medium ${priorityMeta.text}">
-                    <span class="w-1.5 h-1.5 rounded-full ${priorityMeta.dot}"></span>
-                    ${priorityMeta.label}
-                  </span>
-
-                  <!-- Expand Notes Button -->
-                  ${hasNotes ? `
-                    <button
-                      type="button"
-                      data-action="toggle-notes"
-                      class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-medium text-zinc-500 hover:text-indigo-500 dark:text-zinc-400 dark:hover:text-indigo-400 hover:bg-zinc-100 dark:hover:bg-canvas-elevated transition cursor-pointer"
-                    >
-                      <svg class="w-3 h-3 transition-transform duration-200 ${isNotesOpen ? 'rotate-90' : ''}" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                      </svg>
-                      <span>${isNotesOpen ? 'Hide details' : 'View details'}</span>
+                  <div class="flex items-center gap-1">
+                    <button type="button" data-edit-task="${task.id}" title="Edit task" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-surface-800 transition">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                     </button>
-                  ` : ''}
-                </div>
-
-                <!-- Edit & Delete Buttons -->
-                <div class="flex items-center gap-1 sm:opacity-75 sm:group-hover:opacity-100 transition-opacity">
-                  <button
-                    type="button"
-                    data-action="edit"
-                    title="Edit assignment"
-                    class="p-1.5 rounded-lg text-zinc-400 hover:text-indigo-500 dark:hover:text-indigo-400 hover:bg-zinc-100 dark:hover:bg-canvas-elevated transition cursor-pointer"
-                  >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    data-action="delete"
-                    title="Delete assignment"
-                    class="p-1.5 rounded-lg text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition cursor-pointer"
-                  >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Expandable Notes Section -->
-              ${hasNotes ? `
-                <div class="notes-drawer ${isNotesOpen ? 'open' : ''}">
-                  <div>
-                    <div class="mt-3 pt-3 border-t border-zinc-100 dark:border-canvas-border text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed whitespace-normal">
-                      ${formatNotesHtml(task.notes)}
-                    </div>
+                    <button type="button" data-delete-task="${task.id}" title="Delete task" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-slate-100 dark:hover:bg-surface-800 transition">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                    </button>
                   </div>
                 </div>
-              ` : ''}
+
+                ${hasNotes && isExpanded ? `
+                  <div class="mt-3 p-3 rounded-xl text-xs leading-relaxed bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-300">
+                    ${linkifyNotes(task.notes)}
+                  </div>` : ''}
+              </div>
             </div>
-          </div>
-        </article>
-      `;
-    }
-
-    function renderColorPicker() {
-      dom.colorPickerGroup.innerHTML = Object.entries(COLOR_PALETTE).map(([key, info]) => {
-        const selected = key === state.selectedNewCatColor;
-        return `
-          <button
-            type="button"
-            data-color="${key}"
-            title="${info.label}"
-            class="w-7 h-7 rounded-full ${info.swatch} transition cursor-pointer flex items-center justify-center ${
-              selected ? 'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-canvas-card ring-indigo-500 scale-110' : 'opacity-80 hover:opacity-100'
-            }"
-          >
-            ${selected ? `<svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>` : ''}
-          </button>
-        `;
+          </article>`;
       }).join('');
     }
 
-    function renderCategoryManagerList() {
-      const categories = getAllCategories();
-      dom.categoryListContainer.innerHTML = categories.map(cat => {
-        const palette = COLOR_PALETTE[cat.color] || COLOR_PALETTE.zinc;
+    function renderCoursesModal() {
+      document.getElementById('courseColorPicker').innerHTML = COLOR_PALETTE.map(p => `
+        <button type="button" data-pick-color="${p.id}" class="w-6 h-6 rounded-full ${p.dot} transition ${state.selectedCourseColor === p.id ? 'ring-2 ring-offset-2 ring-indigo-500 dark:ring-offset-surface-900 scale-110' : 'opacity-70 hover:opacity-100'}"></button>
+      `).join('');
+
+      document.getElementById('courseList').innerHTML = state.courses.map(c => {
+        const pal = getPalette(c.color);
         return `
-          <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-zinc-50 dark:bg-canvas-dark border border-zinc-200 dark:border-canvas-border">
-            <span class="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-zinc-800 dark:text-zinc-200">
-              <span class="w-2.5 h-2.5 rounded-full ${palette.dot}"></span>
-              ${escapeHtml(cat.name)}
-            </span>
-            ${cat.isDefault
-              ? `<span class="text-[10px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500 font-medium">Default</span>`
-              : `<button type="button" data-delete-cat="${escapeHtml(cat.id)}" class="p-1 rounded-lg text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition cursor-pointer" title="Remove tag">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                 </button>`
-            }
-          </div>
-        `;
+          <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-white/5">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full ${pal.dot}"></span>
+              <span class="text-sm font-medium">${escapeHtml(c.name)}</span>
+            </div>
+            ${state.courses.length > 1 ? `<button type="button" data-remove-course="${c.id}" class="text-xs text-slate-400 hover:text-rose-500 px-2 py-1">Remove</button>` : ''}
+          </div>`;
       }).join('');
     }
 
-    // =========================================================================
-    // 9. MODAL HELPERS
-    // =========================================================================
-    function openModal(modalEl) {
-      modalEl.classList.remove('hidden');
-      modalEl.classList.add('flex');
+    // ---------- Modals ----------
+    function openModal(id) {
+      const m = document.getElementById(id);
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      m.classList.add('hidden');
+      m.classList.remove('flex');
     }
 
-    function closeModal(modalEl) {
-      modalEl.classList.add('hidden');
-      modalEl.classList.remove('flex');
-    }
+    // ---------- Event Listeners ----------
+    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem(STORAGE_KEYS.theme, isDark ? 'dark' : 'light');
+    });
 
-    function openEditTaskModal(taskId) {
-      const task = state.tasks.find(t => t.id === taskId);
-      if (!task) return;
-
-      populateCategoryDropdowns();
-      dom.editTaskId.value = task.id;
-      dom.editTitleInput.value = task.title || '';
-      dom.editCategorySelect.value = task.category || 'Personal';
-      dom.editPrioritySelect.value = task.priority || 'medium';
-      dom.editDueDateInput.value = task.dueDate || getTodayDateString();
-      dom.editDueTimeInput.value = task.dueTime || '';
-      dom.editNotesInput.value = task.notes || '';
-
-      openModal(dom.editTaskModal);
-      dom.editTitleInput.focus();
-    }
-
-    function openDeleteConfirmModal(taskId) {
-      const task = state.tasks.find(t => t.id === taskId);
-      if (!task) return;
-      state.pendingDeleteTaskId = taskId;
-      dom.deleteConfirmText.textContent = `Delete "${task.title}"? This action cannot be undone.`;
-      openModal(dom.deleteConfirmModal);
-    }
-
-    // =========================================================================
-    // 10. EVENT LISTENERS
-    // =========================================================================
-    function setupEventListeners() {
-      // Theme Toggle
-      dom.themeToggleBtn.addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
+    document.querySelectorAll('.priority-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.selectedPriority = btn.dataset.priority;
+        renderPriorityButtons();
       });
+    });
 
-      // Stat Cards click -> jump to filter tab
-      document.querySelectorAll('.stat-card').forEach(card => {
-        card.addEventListener('click', () => {
-          state.activeTab = card.dataset.statFilter;
-          renderStatsAndTabs();
-          renderTasks();
-        });
-      });
+    document.getElementById('toggleNotesBtn').addEventListener('click', () => {
+      const drawer = document.getElementById('notesDrawer');
+      const chev = document.getElementById('notesChevron');
+      drawer.classList.toggle('hidden');
+      chev.classList.toggle('rotate-90');
+    });
 
-      // Priority toggle buttons in Quick-Add
-      dom.priorityToggleGroup.addEventListener('click', (e) => {
-        const btn = e.target.closest('.priority-btn');
-        if (!btn) return;
-        state.formPriority = btn.dataset.priority;
-        renderPriorityToggle();
-      });
+    document.getElementById('addTaskForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const title = document.getElementById('taskTitleInput').value.trim();
+      const dueDate = document.getElementById('taskDateInput').value;
+      if (!title || !dueDate) return;
 
-      // Expand/collapse Notes in Quick-Add
-      dom.toggleFormNotesBtn.addEventListener('click', () => {
-        const isOpen = dom.formNotesWrapper.classList.toggle('open');
-        dom.formNotesChevron.classList.toggle('rotate-90', isOpen);
-        if (isOpen) {
-          setTimeout(() => dom.taskNotesInput.focus(), 150);
-        }
-      });
-
-      // Quick-Add Submit
-      dom.quickAddForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = dom.taskTitleInput.value.trim();
-        const dueDate = dom.taskDueDateInput.value;
-        if (!title || !dueDate) return;
-
-        await createTask({
-          title,
-          category: dom.taskCategorySelect.value,
-          dueDate,
-          dueTime: dom.taskDueTimeInput.value,
-          priority: state.formPriority,
-          notes: dom.taskNotesInput.value
-        });
-
-        // Reset title & notes for rapid entry; keep date & category convenient
-        dom.taskTitleInput.value = '';
-        dom.taskNotesInput.value = '';
-        dom.taskDueTimeInput.value = '';
-        dom.formNotesWrapper.classList.remove('open');
-        dom.formNotesChevron.classList.remove('rotate-90');
-        dom.taskTitleInput.focus();
-      });
-
-      // Filter Tabs
-      dom.statusFilterTabs.addEventListener('click', (e) => {
-        const btn = e.target.closest('.filter-tab');
-        if (!btn) return;
-        state.activeTab = btn.dataset.tab;
-        renderStatsAndTabs();
-        renderTasks();
-      });
-
-      // Search Input
-      dom.searchInput.addEventListener('input', (e) => {
-        state.searchQuery = e.target.value;
-        dom.clearSearchBtn.classList.toggle('hidden', state.searchQuery.length === 0);
-        renderTasks();
-      });
-
-      dom.clearSearchBtn.addEventListener('click', () => {
-        state.searchQuery = '';
-        dom.searchInput.value = '';
-        dom.clearSearchBtn.classList.add('hidden');
-        renderTasks();
-        dom.searchInput.focus();
-      });
-
-      // Course Filter & Sort
-      dom.filterCategorySelect.addEventListener('change', (e) => {
-        state.categoryFilter = e.target.value;
-        renderTasks();
-      });
-
-      dom.sortTasksSelect.addEventListener('change', (e) => {
-        state.sortBy = e.target.value;
-        renderTasks();
-      });
-
-      // Empty State CTA
-      dom.emptyStateActionBtn.addEventListener('click', () => {
-        if (dom.emptyStateActionBtn.dataset.mode === 'reset-filters') {
-          state.activeTab = 'active';
-          state.categoryFilter = 'all';
-          state.searchQuery = '';
-          dom.searchInput.value = '';
-          dom.clearSearchBtn.classList.add('hidden');
-          dom.filterCategorySelect.value = 'all';
-          renderAll();
-        } else {
-          dom.taskTitleInput.focus();
-          dom.taskTitleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      });
-
-      // Delegated Task Card Actions (Toggle, Notes, Edit, Delete)
-      dom.taskList.addEventListener('click', (e) => {
-        const actionBtn = e.target.closest('[data-action]');
-        if (!actionBtn) return;
-        const card = actionBtn.closest('[data-task-id]');
-        if (!card) return;
-
-        const taskId = card.dataset.taskId;
-        const action = actionBtn.dataset.action;
-
-        if (action === 'toggle') {
-          toggleTaskCompleted(taskId);
-        } else if (action === 'toggle-notes') {
-          if (state.expandedNotesIds.has(taskId)) {
-            state.expandedNotesIds.delete(taskId);
-          } else {
-            state.expandedNotesIds.add(taskId);
-          }
-          renderTasks();
-        } else if (action === 'edit') {
-          openEditTaskModal(taskId);
-        } else if (action === 'delete') {
-          openDeleteConfirmModal(taskId);
-        }
-      });
-
-      // Edit Task Form Submit
-      dom.editTaskForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id = dom.editTaskId.value;
-        if (!id) return;
-
-        await updateTask(id, {
-          title: dom.editTitleInput.value.trim(),
-          category: dom.editCategorySelect.value,
-          priority: dom.editPrioritySelect.value,
-          dueDate: dom.editDueDateInput.value,
-          dueTime: dom.editDueTimeInput.value,
-          notes: dom.editNotesInput.value.trim()
-        });
-        closeModal(dom.editTaskModal);
-      });
-
-      // Category Modal Triggers
-      const openCatModal = () => {
-        renderColorPicker();
-        renderCategoryManagerList();
-        openModal(dom.categoryModal);
-        dom.newCategoryNameInput.focus();
+      const newTask = {
+        id: 't-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+        title,
+        courseId: document.getElementById('taskCourseInput').value,
+        dueDate,
+        dueTime: document.getElementById('taskTimeInput').value || '',
+        priority: state.selectedPriority,
+        notes: document.getElementById('taskNotesInput').value.trim(),
+        completed: false,
+        createdAt: Date.now()
       };
-      dom.openCategoryModalBtn.addEventListener('click', openCatModal);
-      dom.inlineAddCatBtn.addEventListener('click', openCatModal);
 
-      // Category Color Picker
-      dom.colorPickerGroup.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-color]');
-        if (!btn) return;
-        state.selectedNewCatColor = btn.dataset.color;
-        renderColorPicker();
+      state.tasks.push(newTask);
+      saveTasks();
+      renderTasks();
+
+      document.getElementById('taskTitleInput').value = '';
+      document.getElementById('taskTimeInput').value = '';
+      document.getElementById('taskNotesInput').value = '';
+      showToast('Task saved locally');
+    });
+
+    document.querySelectorAll('.filter-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.filter = btn.dataset.filter;
+        renderTasks();
       });
+    });
 
-      // Add Category Submit
-      dom.addCategoryForm.addEventListener('submit', async (e) => {
+    document.querySelectorAll('[data-stat-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.filter = btn.dataset.statFilter;
+        renderTasks();
+      });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', e => {
+      state.search = e.target.value;
+      renderTasks();
+    });
+
+    document.getElementById('courseFilterSelect').addEventListener('change', e => {
+      state.courseFilter = e.target.value;
+      renderTasks();
+    });
+
+    document.getElementById('sortSelect').addEventListener('change', e => {
+      state.sort = e.target.value;
+      renderTasks();
+    });
+
+    document.getElementById('taskList').addEventListener('click', e => {
+      const toggleBtn = e.target.closest('[data-toggle-task]');
+      if (toggleBtn) {
+        const task = state.tasks.find(t => t.id === toggleBtn.dataset.toggleTask);
+        if (task) {
+          task.completed = !task.completed;
+          saveTasks();
+          renderTasks();
+        }
+        return;
+      }
+
+      const expandBtn = e.target.closest('[data-expand-notes]');
+      if (expandBtn) {
+        const id = expandBtn.dataset.expandNotes;
+        if (state.expandedNotes.has(id)) state.expandedNotes.delete(id);
+        else state.expandedNotes.add(id);
+        renderTasks();
+        return;
+      }
+
+      const editBtn = e.target.closest('[data-edit-task]');
+      if (editBtn) {
+        const task = state.tasks.find(t => t.id === editBtn.dataset.editTask);
+        if (task) {
+          document.getElementById('editTaskId').value = task.id;
+          document.getElementById('editTitleInput').value = task.title;
+          document.getElementById('editCourseInput').value = task.courseId;
+          document.getElementById('editPriorityInput').value = task.priority;
+          document.getElementById('editDateInput').value = task.dueDate;
+          document.getElementById('editTimeInput').value = task.dueTime || '';
+          document.getElementById('editNotesInput').value = task.notes || '';
+          openModal('editModal');
+        }
+        return;
+      }
+
+      const delBtn = e.target.closest('[data-delete-task]');
+      if (delBtn) {
+        state.tasks = state.tasks.filter(t => t.id !== delBtn.dataset.deleteTask);
+        saveTasks();
+        renderTasks();
+        showToast('Task deleted');
+      }
+    });
+
+    document.getElementById('editTaskForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const id = document.getElementById('editTaskId').value;
+      const task = state.tasks.find(t => t.id === id);
+      if (!task) return;
+      task.title = document.getElementById('editTitleInput').value.trim();
+      task.courseId = document.getElementById('editCourseInput').value;
+      task.priority = document.getElementById('editPriorityInput').value;
+      task.dueDate = document.getElementById('editDateInput').value;
+      task.dueTime = document.getElementById('editTimeInput').value || '';
+      task.notes = document.getElementById('editNotesInput').value.trim();
+      saveTasks();
+      renderTasks();
+      closeModal('editModal');
+      showToast('Changes saved');
+    });
+
+    // Courses Modal
+    ['openCoursesBtn', 'quickAddCourseBtn'].forEach(id => {
+      document.getElementById(id).addEventListener('click', () => {
+        renderCoursesModal();
+        openModal('coursesModal');
+      });
+    });
+
+    document.getElementById('courseColorPicker').addEventListener('click', e => {
+      const btn = e.target.closest('[data-pick-color]');
+      if (btn) {
+        state.selectedCourseColor = btn.dataset.pickColor;
+        renderCoursesModal();
+      }
+    });
+
+    document.getElementById('addCourseForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const input = document.getElementById('newCourseNameInput');
+      const name = input.value.trim();
+      if (!name) return;
+      state.courses.push({
+        id: 'c-' + Date.now(),
+        name,
+        color: state.selectedCourseColor
+      });
+      saveCourses();
+      renderCourseDropdowns();
+      renderCoursesModal();
+      input.value = '';
+      showToast(`Added course "${name}"`);
+    });
+
+    document.getElementById('courseList').addEventListener('click', e => {
+      const btn = e.target.closest('[data-remove-course]');
+      if (!btn || state.courses.length <= 1) return;
+      state.courses = state.courses.filter(c => c.id !== btn.dataset.removeCourse);
+      saveCourses();
+      renderCourseDropdowns();
+      renderCoursesModal();
+      renderTasks();
+    });
+
+    // Backup & Restore
+    document.getElementById('openBackupBtn').addEventListener('click', () => {
+      document.getElementById('importStatus').classList.add('hidden');
+      openModal('backupModal');
+    });
+
+    document.getElementById('exportJsonBtn').addEventListener('click', () => {
+      const payload = {
+        app: 'DueFlow',
+        exportedAt: new Date().toISOString(),
+        courses: state.courses,
+        tasks: state.tasks
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `dueflow-backup-${getTodayISO()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Backup downloaded');
+    });
+
+    document.getElementById('importJsonBtn').addEventListener('click', () => {
+      document.getElementById('importFileInput').click();
+    });
+
+    document.getElementById('importFileInput').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const statusEl = document.getElementById('importStatus');
+      const mode = document.querySelector('input[name="importMode"]:checked').value;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (!Array.isArray(data.tasks)) throw new Error('Missing tasks list');
+
+          if (mode === 'replace') {
+            state.tasks = data.tasks;
+            if (Array.isArray(data.courses) && data.courses.length) state.courses = data.courses;
+          } else {
+            const existingTaskIds = new Set(state.tasks.map(t => t.id));
+            data.tasks.forEach(t => { if (t && t.id && !existingTaskIds.has(t.id)) state.tasks.push(t); });
+            if (Array.isArray(data.courses)) {
+              const existingCourseIds = new Set(state.courses.map(c => c.id));
+              data.courses.forEach(c => { if (c && c.id && !existingCourseIds.has(c.id)) state.courses.push(c); });
+            }
+          }
+
+          saveTasks();
+          saveCourses();
+          renderCourseDropdowns();
+          renderTasks();
+
+          statusEl.textContent = `Imported ${data.tasks.length} task(s) successfully.`;
+          statusEl.className = 'text-xs text-emerald-600 dark:text-emerald-400';
+          showToast('Backup restored');
+        } catch {
+          statusEl.textContent = 'Invalid backup file. Please select a DueFlow .json file.';
+          statusEl.className = 'text-xs text-rose-500';
+        }
+        e.target.value = '';
+      };
+      reader.readAsText(file);
+    });
+
+    // Close modals on X button, backdrop click, or Escape
+    document.querySelectorAll('[data-close-modal]').forEach(btn => {
+      btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
+    });
+    ['editModal', 'coursesModal', 'backupModal'].forEach(id => {
+      document.getElementById(id).addEventListener('click', e => {
+        if (e.target.id === id) closeModal(id);
+      });
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') ['editModal', 'coursesModal', 'backupModal'].forEach(closeModal);
+      if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
         e.preventDefault();
-        const name = dom.newCategoryNameInput.value.trim();
-        if (!name) return;
-        await addCustomCategory(name, state.selectedNewCatColor);
-        dom.newCategoryNameInput.value = '';
-        dom.taskCategorySelect.value = name;
-      });
+        document.getElementById('searchInput').focus();
+      }
+    });
 
-      // Delete Custom Category
-      dom.categoryListContainer.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-delete-cat]');
-        if (!btn) return;
-        deleteCustomCategory(btn.dataset.deleteCat);
-      });
-
-      // Confirm Delete Task
-      dom.confirmDeleteBtn.addEventListener('click', async () => {
-        if (state.pendingDeleteTaskId) {
-          await removeTask(state.pendingDeleteTaskId);
-          state.pendingDeleteTaskId = null;
-        }
-        closeModal(dom.deleteConfirmModal);
-      });
-
-      // Close Modals via Close Buttons or Backdrop Click
-      document.querySelectorAll('[data-close-modal]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const modal = document.getElementById(btn.dataset.closeModal);
-          if (modal) closeModal(modal);
-        });
-      });
-
-      [dom.editTaskModal, dom.categoryModal, dom.deleteConfirmModal].forEach(modal => {
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) closeModal(modal);
-        });
-      });
-
-      // Keyboard Shortcuts: '/' focuses search, 'Escape' closes modals
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeModal(dom.editTaskModal);
-          closeModal(dom.categoryModal);
-          closeModal(dom.deleteConfirmModal);
-        } else if (
-          e.key === '/' &&
-          !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)
-        ) {
-          e.preventDefault();
-          dom.searchInput.focus();
-        }
-      });
-    }
-
-    // =========================================================================
-    // 11. BOOTSTRAP
-    // =========================================================================
-    function init() {
-      dom.taskDueDateInput.value = getTodayDateString();
-      renderPriorityToggle();
-      populateCategoryDropdowns();
-      setupEventListeners();
-      initFirebase();
-    }
-
-    init();
+    // ---------- Init ----------
+    loadState();
+    document.getElementById('taskDateInput').value = getTodayISO();
+    renderCourseDropdowns();
+    renderPriorityButtons();
+    renderTasks();
   </script>
 </body>
 </html>
